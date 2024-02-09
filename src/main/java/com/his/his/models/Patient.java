@@ -1,6 +1,7 @@
 package com.his.his.models;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +31,9 @@ public class Patient
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long patientId;
+    @GeneratedValue
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
+    private UUID patientId;
     
     @Column(name = "Name")
     private String name;
