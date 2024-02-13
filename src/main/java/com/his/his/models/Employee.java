@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
-
-
 @Entity
 @Getter
 @Setter
@@ -17,26 +16,35 @@ import java.util.UUID;
 @Table(name = "employee")
 public class Employee
 {
+    public Employee() {
+
+    }
+
     public enum EmployeeStatus {
         CHECKED_IN, CHECKED_OUT
     }
 
 
+//    @Id
+//    @GeneratedValue
     @Id
-    @GeneratedValue
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column( updatable = false, nullable = false )
+    // private UUID employeeId;
     private UUID employeeId;
 
-    @Column(name = "Name")
+
+    @Column(name = "Name", nullable = false )
     private String name;
 
-    @Column(name = "DateOfBirth")
+    @Column(name = "DateOfBirth", nullable = false )
     private String dateOfBirth;
 
-    @Column(name = "LastCheckIn")
+    @Column(name = "LastCheckIn", nullable = false )
     private String lastCheckIn;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false )
     @Enumerated(EnumType.STRING)
     private EmployeeStatus employeeStatus;
 

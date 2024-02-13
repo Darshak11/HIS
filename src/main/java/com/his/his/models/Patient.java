@@ -35,24 +35,24 @@ public class Patient
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
     private UUID patientId;
     
-    @Column(name = "Name")
+    @Column(name = "Name", nullable = false )
     private String name;
 
-    @Column(name = "aabhaId")
+    @Column(name = "aabhaId", nullable = false )
     private String aabhaId;
 
-    @Column(name = "DateOfBirth")
+    @Column(name = "DateOfBirth", nullable = false )
     private String dateOfBirth;
 
-    @Column(name = "Gender")
+    @Column(name = "Gender", nullable = false )
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "patientType")
+    @Column(name = "patientType", nullable = false )
     @Enumerated(EnumType.STRING)
     private PatientType patientType;
 
-    @Column(name = "DischargeStatus")
+    @Column(name = "DischargeStatus", nullable = false )
     @Enumerated(EnumType.STRING)
     private DischargeStatus dischargeStatus;
 
