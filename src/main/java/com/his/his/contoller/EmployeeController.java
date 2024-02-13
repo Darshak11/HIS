@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/user")
+@RequestMapping("/employee")
 public class EmployeeController {
     @Autowired
-    private UserDetailsServiceImpl userService;
+    private EmployeeDetailsServiceImpl userService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody EmployeeRegisterDto registerDto) {
