@@ -1,10 +1,10 @@
 pipeline {
     environment {
-        backend = 'backend-image' // Specify your backend Docker image name/tag
-        frontend = 'frontend-image' // Specify your frontend Docker image name/tag
+        backend = 'his_backend-image' // Specify your backend Docker image name/tag
+        frontend = 'his_frontend-image' // Specify your frontend Docker image name/tag
         mysqlImage = 'mysql:latest' // Specify the MySQL Docker image
         mysqlContainerName = 'mysql-container' // Specify the name for your MySQL container
-        MYSQL_ROOT_PASSWORD = 'Kota@2020'
+        MYSQL_ROOT_PASSWORD = '123456'
         MYSQL_PORT = '3306'
         docker_image = ''
         NETWORK = 'deployment_my-network'
@@ -30,7 +30,7 @@ pipeline {
                 script {
                     sh  'docker container stop mysqldb'
                     sh  'docker container rm mysqldb'
-                    sh  'docker run --name mysqldb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d -v "/var/lib/mysql" --network=${NETWORK} mysql:latest'
+                    sh  'docker run --name mysqldb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d -v "/var/lib/mysql" mysql:latest'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
         stage('Stage 1: Git Clone') {
             steps {
                 echo 'Cloning the Git repository'
-                git branch: 'main', url: 'https://github.com/KaranjitSaha/Employee-Management-System.git'
+                git branch: 'Karan', url: 'https://github.com/Darshak11/HIS.git', credentialsId: 'github-credentials'
             }
         }
 
@@ -46,6 +46,33 @@ pipeline {
             steps {
                 echo 'Building Spring Boot backend'
                 sh 'mvn clean install'
+            }
+        }
+        
+        stage('Stage 3: Build backend Docker Image') {
+            steps {
+                echo 'Building backend Docker image'
+                sh "docker build -t karanjit708/${backend} ."
+            }
+        }
+        
+        stage('Stage 4: Push backend Docker image to DockerHub') {
+            steps {
+                echo 'Pushing backend Docker image to DockerHub'
+                script {
+                    docker.withRegistry('', 'DockerCred') {
+                        sh 'docker push karanjit708/${backend}'
+                    }
+                }
+            }
+        }
+        
+        stage('Stage 5: Clean docker images') {
+            steps {
+                script {
+                    sh 'docker container prune -f'
+                    sh 'docker image prune -f'
+                }
             }
         }
     }

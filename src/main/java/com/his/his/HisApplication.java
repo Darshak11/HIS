@@ -6,7 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.his.his.models.Employee;
+import com.his.his.models.Patient;
+import com.his.his.models.Patient.Gender;
+import com.his.his.models.Patient.PatientType;
 import com.his.his.repository.EmployeeRepository;
+import com.his.his.repository.PatientRepository;
 
 import java.util.UUID;
 
@@ -19,6 +23,9 @@ public class HisApplication implements CommandLineRunner {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private PatientRepository patientRepository;
 
 	@Override
 	public void run(String ...args) throws Exception{
@@ -34,6 +41,18 @@ public class HisApplication implements CommandLineRunner {
 		employee1.setEmployeeStatus(Employee.EmployeeStatus.CHECKED_OUT);
 		employeeRepository.save(employee);
 		employeeRepository.save(employee1);
+
+
+		Patient patient=new Patient();
+		patient.setAabhaId("1234");
+		patient.setDateOfBirth("12/06/2002");
+		patient.setGender(Gender.MALE);
+		patient.setName("Karan");
+		patient.setPatientType(PatientType.INPATIENT);
+
+		patientRepository.save(patient);
+
+
 	}
 
 }

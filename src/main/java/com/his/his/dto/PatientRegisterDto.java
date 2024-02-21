@@ -15,8 +15,6 @@ public class PatientRegisterDto implements Serializable{
     String dob ;
     Patient.Gender gender;
     Patient.PatientType patientType;
-    Patient.DischargeStatus dischargeStatus;
-
 }
 
 
