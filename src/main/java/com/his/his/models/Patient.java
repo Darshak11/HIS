@@ -48,8 +48,17 @@ public class Patient
     @Column(name = "aabhaId", nullable = false )
     private String aabhaId;
 
+    @Column(name = "aadharId", nullable = false )
+    private String aadharId;
+
+    @Column(name = "emailId", nullable = false )
+    private String emailId;
+
     @Column(name = "DateOfBirth", nullable = false )
     private String dateOfBirth;
+
+    @Column(name="Emergency Contact Number",nullable = false)
+    private String emergencyContactNumber;
 
     @Column(name = "Gender", nullable = false )
     @Enumerated(EnumType.STRING)

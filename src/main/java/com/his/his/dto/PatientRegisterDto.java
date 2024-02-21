@@ -12,7 +12,10 @@ import java.io.Serializable;
 public class PatientRegisterDto implements Serializable{
     String name ;
     String aabhaId ;
-    String dob ;
+    String aadharId;
+    String emailId;
+    String dateOfBirth;
+    String emergencyContactNumber;
     Patient.Gender gender;
     Patient.PatientType patientType;
 }

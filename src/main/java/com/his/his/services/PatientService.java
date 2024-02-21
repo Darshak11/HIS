@@ -26,7 +26,10 @@ public class PatientService {
         Patient patient = new Patient();
         patient.setName(patientRegisterDto.getName());
         patient.setAabhaId(patientRegisterDto.getAabhaId());
-        patient.setDateOfBirth(patientRegisterDto.getDob());
+        patient.setAadharId(patientRegisterDto.getAadharId());
+        patient.setEmailId(patientRegisterDto.getEmailId());
+        patient.setDateOfBirth(patientRegisterDto.getDateOfBirth());
+        patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
         patient.setPatientType(patientRegisterDto.getPatientType());
 

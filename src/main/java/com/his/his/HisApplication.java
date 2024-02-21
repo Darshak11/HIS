@@ -29,29 +29,43 @@ public class HisApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String ...args) throws Exception{
-		Employee employee=new Employee();
-		employee.setDateOfBirth("12/05/12");
-		employee.setName("Karan");
-		employee.setLastCheckIn("1:02");
-		employee.setEmployeeStatus(Employee.EmployeeStatus.CHECKED_IN);
-		Employee employee1=new Employee();
-		employee1.setName("Darshak");
-		employee1.setDateOfBirth("12/03/12");
-		employee1.setLastCheckIn("1:02");
-		employee1.setEmployeeStatus(Employee.EmployeeStatus.CHECKED_OUT);
-		employeeRepository.save(employee);
-		employeeRepository.save(employee1);
+	// 	Employee employee=new Employee();
+	// 	employee.setDateOfBirth("12/05/12");
+	// 	employee.setName("Karan");
+	// 	employee.setLastCheckIn("1:02");
+	// 	employee.setEmployeeStatus(Employee.EmployeeStatus.CHECKED_IN);
+	// 	Employee employee1=new Employee();
+	// 	employee1.setName("Darshak");
+	// 	employee1.setDateOfBirth("12/03/12");
+	// 	employee1.setLastCheckIn("1:02");
+	// 	employee1.setEmployeeStatus(Employee.EmployeeStatus.CHECKED_OUT);
+	// 	employeeRepository.save(employee);
+	// 	employeeRepository.save(employee1);
 
 
-		Patient patient=new Patient();
-		patient.setAabhaId("1234");
-		patient.setDateOfBirth("12/06/2002");
-		patient.setGender(Gender.MALE);
-		patient.setName("Karan");
-		patient.setPatientType(PatientType.INPATIENT);
+	// 	Patient patient=new Patient();
+	// 	patient.setName("Karan");
+	// 	patient.setAabhaId("1234");
+	// 	patient.setAadharId("123456");
+	// 	patient.setEmailId("kadn@gmail.com");
+	// 	patient.setDateOfBirth("12/06/2002");
+	// 	patient.setEmergencyContactNumber("45454545454");
+	// 	patient.setGender(Gender.MALE);
+	// 	patient.setPatientType(PatientType.INPATIENT);
 
-		patientRepository.save(patient);
+	// 	Patient patient1=new Patient();
+	// 	patient1.setName("Darshak");
+	// 	patient1.setAabhaId("1234");
+	// 	patient1.setAadharId("123456");
+	// 	patient1.setEmailId("kadn@gmail.com");
+	// 	patient1.setDateOfBirth("12/06/2002");
+	// 	patient1.setEmergencyContactNumber("45454545454");
+	// 	patient1.setGender(Gender.MALE);
+	// 	patient1.setPatientType(PatientType.OUTPATIENT);
 
+
+	// 	patientRepository.save(patient);
+	// 	patientRepository.save(patient1);
 
 	}
 

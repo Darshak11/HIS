@@ -1,0 +1,11 @@
+version: '3'
+services:
+  mysqldb:
+    image: "mysql"
+    container_name: mysqldb
+    volumes:
+      - /media/karanjitsaha/DATA/Semester 8/HAD/HIS/Data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"

@@ -60,7 +60,10 @@ public class PatientController {
         Patient updatePatient = patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient does not exist with id "+id));
         updatePatient.setName(patientDetails.getName());
         updatePatient.setAabhaId(patientDetails.getAabhaId());
+        updatePatient.setAadharId(patientDetails.getAadharId());
+        updatePatient.setEmailId(patientDetails.getEmailId());
         updatePatient.setDateOfBirth(patientDetails.getDateOfBirth());
+        updatePatient.setEmergencyContactNumber(patientDetails.getEmergencyContactNumber());
         updatePatient.setGender(patientDetails.getGender());
         updatePatient.setPatientType(patientDetails.getPatientType());
         patientRepository.save(updatePatient);
