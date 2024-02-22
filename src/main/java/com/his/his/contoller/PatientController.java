@@ -82,4 +82,15 @@ public class PatientController {
 
     // }
 
+
+    @GetMapping("/transfer/{id}")
+    public ResponseEntity<Patient> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
+        Patient patient=patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient not exist with id "+id)) ;
+        patient.setPatientType(newPatientType);
+        patientRepository.save(patient);
+        // logger.debug("Patient found");
+        return ResponseEntity.ok(patient);
+    }
+
+    
 }
