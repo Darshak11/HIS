@@ -12,6 +12,6 @@ import java.io.Serializable;
 public class EmployeeRegisterDto implements Serializable {
     String name ;
     String dob ;
-    String lastCheckIn;
-    Employee.EmployeeStatus employeeStatus;
+    // String lastCheckIn;
+    // Employee.EmployeeStatus employeeStatus;
 }

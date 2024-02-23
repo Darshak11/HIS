@@ -41,10 +41,10 @@ public class Employee
     @Column(name = "DateOfBirth", nullable = false )
     private String dateOfBirth;
 
-    @Column(name = "LastCheckIn", nullable = false )
+    @Column(name = "LastCheckIn" )
     private String lastCheckIn;
 
-    @Column(name = "status", nullable = false )
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private EmployeeStatus employeeStatus;
 

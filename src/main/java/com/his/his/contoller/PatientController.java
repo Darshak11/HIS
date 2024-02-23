@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +37,12 @@ public class PatientController {
         return patientRepository.findAll();
     }
 
-    //BUILD CREATE Patient REST API
-    @PostMapping
-    public Patient createPatient(@RequestBody Patient patient){
-        // logger.debug("Patient added");
-        return patientRepository.save(patient);
-    }
+    // //BUILD CREATE Patient REST API
+    // @PostMapping
+    // public Patient createPatient(@RequestBody Patient patient){
+    //     // logger.debug("Patient added");
+    //     return patientRepository.save(patient);
+    // }
 
     //BUILD GET Patient BY ID REST API
     @GetMapping("{id}")

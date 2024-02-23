@@ -38,12 +38,12 @@ public class EmployeeController {
         return employeeRepository.findAll();
     }
 
-    //BUILD CREATE EMPLOYEE REST API
-    @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee){
-        // logger.debug("Employee added");
-        return employeeRepository.save(employee);
-    }
+    // //BUILD CREATE EMPLOYEE REST API
+    // @PostMapping
+    // public Employee createEmployee(@RequestBody Employee employee){
+    //     // logger.debug("Employee added");
+    //     return employeeRepository.save(employee);
+    // }
 
     //BUILD GET EMPLOYEE BY ID REST API
     @GetMapping("{id}")

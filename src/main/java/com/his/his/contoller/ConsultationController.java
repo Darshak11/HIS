@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.his.his.models.Consultation;
-import com.his.his.models.Patient;
 import com.his.his.repository.ConsultationRepository;
-import com.his.his.repository.PatientRepository;
 import com.his.his.services.ConsultationService;
 
 @RestController
