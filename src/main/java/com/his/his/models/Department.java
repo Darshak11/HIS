@@ -42,4 +42,11 @@ public class Department {
 
     @Column(nullable = false)
     private int noOfNurses;
+
+    public Department(String departmentName, String departmentHead, int noOfDoctors, int noOfNurses) {
+        this.departmentName = departmentName;
+        this.departmentHead = departmentHead;
+        this.noOfDoctors = noOfDoctors;
+        this.noOfNurses = noOfNurses;
+    }
 }

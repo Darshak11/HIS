@@ -1,5 +1,7 @@
 package com.his.his;
 
+import com.his.his.models.Department;
+import com.his.his.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,6 +33,9 @@ public class HisApplication implements CommandLineRunner {
 
 	@Autowired
 	private ConsultationRepository consultationRepository;
+
+	@Autowired
+	private DepartmentRepository departmentRepository;
 
 	@Override
 	public void run(String ...args) throws Exception{
@@ -84,6 +89,13 @@ public class HisApplication implements CommandLineRunner {
 
 		consultationRepository.save(consultation);
 		consultationRepository.save(consultation1);
+
+
+
+		Department department1 = new Department("Orthopaedics","Karanjit",5,10);
+		Department department2 =new Department("Pediatrics","Darshak",1,12);
+		departmentRepository.save(department1);
+		departmentRepository.save(department2);
 	}
 
 }

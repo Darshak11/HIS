@@ -2,11 +2,13 @@ package com.his.his.contoller;
 
 import com.his.his.dto.PatientRegisterDto;
 import com.his.his.exception.ResourceNotFoundException;
+import com.his.his.models.Department;
 import com.his.his.models.Patient;
 import com.his.his.repository.PatientRepository;
 import com.his.his.services.PatientService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +93,15 @@ public class PatientController {
         return ResponseEntity.ok(patient);
     }
 
+    @GetMapping("/getPatientId")
+    public ResponseEntity<UUID> getPatientIdByName(@RequestParam String patientName) {
+        Optional<Patient> patientOptional = patientRepository.findByName(patientName);
+        if (patientOptional.isPresent()) {
+            Patient patient = patientOptional.get();
+            return ResponseEntity.ok(patient.getPatientId());
+        } else {
+            throw new ResourceNotFoundException("Patient with name " + patientName + " not found");
+        }
+    }
     
 }
