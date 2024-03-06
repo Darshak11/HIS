@@ -1,0 +1,100 @@
+package com.his.his.models;
+
+import java.util.Collection;
+import java.util.List;
+
+
+import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.his.his.token.Token;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
+public class User implements UserDetails
+{
+    public enum EmployeeStatus {
+        CHECKED_IN, CHECKED_OUT
+    }
+
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "employeeId", updatable = false, nullable = false )
+    private UUID employeeId; 
+    
+    @Column(name = "Name", nullable = false )
+    private String name;
+
+    @Column(name = "DateOfBirth", nullable = false )
+    private String dateOfBirth;
+
+    @Column(name="Password", nullable = false)
+    private String password;
+
+    @Column(name = "LastCheckIn" )
+    private String lastCheckIn;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus employeeStatus;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Token> tokens;
+
+    // Implementing UserDetails methods
+    @Override
+    public String getUsername() {
+        // Add your implementation here
+        return String.valueOf(employeeId);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Add your implementation here
+        return true;
+    }
+
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // Add your implementation here
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Add your implementation here
+        return role.getAuthorities();
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        // Add your implementation here
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Add your implementation here
+        return true;
+    }
+}

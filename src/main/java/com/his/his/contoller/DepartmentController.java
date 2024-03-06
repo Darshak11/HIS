@@ -1,16 +1,15 @@
 package com.his.his.contoller;
 
-import com.his.his.exception.ResourceNotFoundException;
+import com.his.his.dto.DepartmentRequestDto;
 import com.his.his.models.Department;
-import com.his.his.repository.DepartmentRepository;
+import com.his.his.services.DepartmentService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,53 +17,46 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/department")
 public class DepartmentController {
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    @Autowired 
+    private DepartmentService departmentService;
 
     @GetMapping
-    public List<Department> getAllDepartment(){
-        return departmentRepository.findAll();
+    @PreAuthorize("hasAuthority('department:read')")
+    public List<DepartmentRequestDto> getAllDepartment(){
+        return departmentService.getAllDepartments();
     }
 
     @PostMapping
-    public Department createDepartment(@RequestBody Department department){
-        return departmentRepository.save(department);
+    @PreAuthorize("hasAuthority('department:update')")
+    public DepartmentRequestDto createDepartment(@RequestBody Department department){
+        return departmentService.createDepartment(department);
     }
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Department> getDepartmentId(@PathVariable UUID id){
-        Department department = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
-        return ResponseEntity.ok(department);
+    @PreAuthorize("hasAuthority('department:read')")
+    public ResponseEntity<DepartmentRequestDto> getDepartmentId(@PathVariable UUID id){
+        DepartmentRequestDto dto = departmentService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Department> updateDepartment(@PathVariable UUID id, @RequestBody Department departmentDetails){
-        Department updatedepartment = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
-        updatedepartment.setDepartmentHead(departmentDetails.getDepartmentHead());
-        updatedepartment.setDepartmentName(departmentDetails.getDepartmentName());
-        updatedepartment.setNoOfNurses(departmentDetails.getNoOfNurses());
-        updatedepartment.setNoOfDoctors(departmentDetails.getNoOfDoctors());
-        departmentRepository.save(updatedepartment);
-        return ResponseEntity.ok(updatedepartment);
+    @PreAuthorize("hasAuthority('department:update')")
+    public ResponseEntity<DepartmentRequestDto> updateDepartment(@PathVariable UUID id, @RequestBody Department departmentDetails){
+        DepartmentRequestDto updatedDto = departmentService.updateDepartment(id, departmentDetails); 
+        return ResponseEntity.ok(updatedDto);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('department:delete')")
     public ResponseEntity<HttpStatus> deleteDepartment(@PathVariable UUID id){
-        Department department = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
-        departmentRepository.delete(department);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return departmentService.deleteDepartment(id);
     }
 
     @GetMapping("/getDepartmentId")
-    public ResponseEntity<UUID> getDepartmentIdByName(@RequestParam String departmentName) {
-        Optional<Department> departmentOptional = departmentRepository.findByDepartmentName(departmentName);
-        if (departmentOptional.isPresent()) {
-            Department department = departmentOptional.get();
-            return ResponseEntity.ok(department.getDepartmentId());
-        } else {
-            throw new ResourceNotFoundException("Department with name " + departmentName + " not found");
-        }
+    @PreAuthorize("hasAuthority('department:read')")
+    public ResponseEntity<List<UUID>> getDepartmentIdByName(@RequestParam String departmentName) {
+        return ResponseEntity.ok(departmentService.getDepartmentIdByName(departmentName));
     }
 
     /*

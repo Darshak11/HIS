@@ -39,7 +39,7 @@ public class Patient
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(updatable = false, nullable = false )
+    @Column(name="patientId",updatable = false, nullable = false )
     private UUID patientId;
     
     @Column(name = "Name", nullable = false )

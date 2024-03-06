@@ -1,6 +1,5 @@
 package com.his.his.dto;
 
-import com.his.his.models.Employee;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
