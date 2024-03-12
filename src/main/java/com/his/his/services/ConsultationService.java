@@ -1,5 +1,7 @@
 package com.his.his.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,17 @@ public class ConsultationService {
     }
 
     public ResponseEntity<?> addConsultation(Consultation _consultation){
+        
         Consultation consultation = new Consultation();
-        consultation.setDoctorId(_consultation.getDoctorId());
+        consultation.setDoctor(_consultation.getDoctor());
         consultation.setEmrId(_consultation.getEmrId());
-        consultation.setPatientId(_consultation.getPatientId());
+        consultation.setPatient(_consultation.getPatient());
 
         consultationRepository.save(consultation);
         return new ResponseEntity<>("Consultation Added successfully",HttpStatus.OK);
+    }
+
+    public List<Consultation> getAllConsultations(){
+        return consultationRepository.findAll();
     }
 }

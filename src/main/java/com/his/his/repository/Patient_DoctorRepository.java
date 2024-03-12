@@ -1,15 +1,19 @@
-// package com.his.his.repository;
+package com.his.his.repository;
 
-// import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
-// import com.his.his.models.Patient;
-// import com.his.his.models.Patient_Doctor;
-// import org.springframework.data.jpa.repository.JpaRepository;
+import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
+import com.his.his.models.Patient;
+import com.his.his.models.Patient_Doctor;
+import com.his.his.models.User;
 
-// import java.util.List;
-// import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-// public interface Patient_DoctorRepository extends JpaRepository<Patient_Doctor, Patient_DoctorId> {
+import java.util.List;
+import java.util.UUID;
 
-//     List<Patient> findPatientsByDoctorId(UUID doctorId);
+public interface Patient_DoctorRepository extends JpaRepository<Patient_Doctor, Patient_DoctorId> {
 
-// }
+    List<Patient_Doctor> findPatientsByDoctor(User doctor);
+
+    List<Patient_Doctor> findDoctorsByPatient(Patient patient);
+
+}

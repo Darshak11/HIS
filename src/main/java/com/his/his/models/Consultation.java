@@ -8,6 +8,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,12 +35,17 @@ public class Consultation {
     @Column(updatable = false, nullable = false )
     private UUID consultationId;
 
-	@Column(name="patientID",updatable = false,nullable = false)
-    private UUID patientId;
+	@MapsId("patientId")
+    @OneToOne
+    @JoinColumn(name = "patientId", referencedColumnName = "patientId", insertable = false, updatable = false)
+    private Patient patient;
 
-    @Column(name="doctorID",updatable = false,nullable = false)
-    private UUID doctorId;
+    @MapsId("employeeId")
+    @OneToOne
+    @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
+    private User doctor;
 
+    
     @Column(name="EMRID",updatable = false,nullable = false)
     private UUID emrId;
 }
