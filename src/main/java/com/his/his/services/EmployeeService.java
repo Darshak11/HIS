@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,9 +60,16 @@ public class EmployeeService {
     }
 
     public EmployeeRequestDto getEmployeeById(UUID id) {
-        User user = employeeRepository.findById(id);
-                
-
+        Optional<User> userOptional = employeeRepository.findById(id);
+    
+        if (!userOptional.isPresent()) {
+            // Handle the case where no user with the given ID exists.
+            // This could be throwing an exception, returning a default value, etc.
+            throw new ResourceNotFoundException("Employee not exists " + id);
+        }
+    
+        User user = userOptional.get();
+    
         EmployeeRequestDto userDto = new EmployeeRequestDto();
         userDto.setEmployeeId(user.getEmployeeId());
         userDto.setName(user.getName());
@@ -69,7 +77,7 @@ public class EmployeeService {
         userDto.setLastCheckIn(user.getLastCheckIn());
         userDto.setEmployeeStatus(user.getEmployeeStatus());
         // set other fields
-
+    
         return userDto;
     }
 

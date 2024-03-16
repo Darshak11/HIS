@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.his.his.models.Patient;
 import com.his.his.models.Patient_Department;
 import com.his.his.models.Patient_Doctor;
@@ -54,13 +56,15 @@ public class HisApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String ...args) throws Exception{
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 		User employee=new User();
 		employee.setDateOfBirth("12/05/12");
 		employee.setName("Karan");
 		employee.setLastCheckIn("1:02");
 		employee.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
 		employee.setRole(Role.DOCTOR);
-		employee.setPassword("1234");
+		employee.setPassword(encoder.encode("1234"));
 
 
 		User employee1=new User();
@@ -69,7 +73,7 @@ public class HisApplication implements CommandLineRunner {
 		employee1.setLastCheckIn("1:02");
 		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
 		employee1.setRole(Role.NURSE);
-		employee1.setPassword("1234");
+		employee1.setPassword(encoder.encode("1234"));
 
 		employeeRepository.save(employee);
 		employeeRepository.save(employee1);
