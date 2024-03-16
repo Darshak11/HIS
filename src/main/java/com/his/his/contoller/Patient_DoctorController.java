@@ -1,36 +1,42 @@
-// package com.his.his.contoller;
+package com.his.his.contoller;
 
-// import com.his.his.models.Patient;
-// import com.his.his.repository.Patient_DoctorRepository;
-// import org.springframework.web.bind.annotation.*;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.ResponseEntity;
+import java.util.List;
+import java.util.UUID;
 
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-// @RestController
-// @CrossOrigin("*")
-// @RequestMapping("/patient_doctor")
-// public class Patient_DoctorController {
-//    @Autowired
-//    private Patient_DoctorRepository patientDoctorRepository;
+import com.his.his.dto.EmployeeRequestDto;
+import com.his.his.models.Patient;
+import com.his.his.services.Patient_DoctorService;
 
-// @GetMapping("/getAllPatientsByDoctorID/{doctorId}")
-// public ResponseEntity<List<Patient>> getAllPatientsByDoctorID(@PathVariable UUID doctorId) {
-//     List<Patient> patients = patientDoctorRepository.findPatientsByDoctorId(doctorId);
-//     if (patients.isEmpty()) {
-//         return ResponseEntity.noContent().build();
-//     } else {
-//         return ResponseEntity.ok(patients);
-//     }
-// }
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/patientDoctor")
+public class Patient_DoctorController {
 
-// //    @GetMapping("getAllDoctorsByPatientID/{patientId}")
-// //    public List<UUID> getAllDoctorsByPatientID(@PathVariable UUID patientId) {
-// //        // Retrieve doctor IDs associated with the given patientId
-// //        List<UUID> doctorIds = patientDoctorRepository.findDoctorIdsByPatientId(patientId);
-// //        return doctorIds;
-// //    }
-// }
+    @Autowired
+    private Patient_DoctorService patientDoctorService;
+
+    // @Autowired
+    // private EmployeeService employeeService;
+
+    @GetMapping("/getAllPatientsByDoctorID/{doctorId}")
+    @PreAuthorize("hasAuthority('patient:read')")
+    public ResponseEntity<List<Patient>> getAllPatientsByDoctorID(@PathVariable UUID doctorId) {
+        return patientDoctorService.getAllPatientsByDoctorID(doctorId);
+    }
+
+
+    @GetMapping("getAllDoctorsByPatientID/{patientId}")
+    @PreAuthorize("hasAuthority('doctor:read')")
+    public ResponseEntity<List<EmployeeRequestDto>> getAllDoctorsByPatientID(@PathVariable UUID patientId) {
+    return patientDoctorService.getAllDoctorsByPatientID(patientId);
+    }
+}

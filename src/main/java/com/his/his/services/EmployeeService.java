@@ -59,8 +59,8 @@ public class EmployeeService {
     }
 
     public EmployeeRequestDto getEmployeeById(UUID id) {
-        User user = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id " + id));
+        User user = employeeRepository.findById(id);
+                
 
         EmployeeRequestDto userDto = new EmployeeRequestDto();
         userDto.setEmployeeId(user.getEmployeeId());

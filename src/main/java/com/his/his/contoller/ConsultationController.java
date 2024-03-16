@@ -31,11 +31,8 @@ public class ConsultationController {
         return consultationService.addConsultation(consultation);
     }
 
-    @Autowired
-    private ConsultationRepository consultationRepository;
-
     @GetMapping
     public List<Consultation> getAllConsultations(){
-        return consultationRepository.findAll();
+        return consultationService.getAllConsultations();
     }
 }

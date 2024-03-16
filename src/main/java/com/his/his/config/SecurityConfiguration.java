@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/department","/department/{id}").hasAnyAuthority(DEP_UPDATE.getPermission())
                                 .requestMatchers("/patient","/patient/{id}","patient/transfer/{id}").hasAnyAuthority(PATIENT_UPDATE.getPermission())
                                 .requestMatchers("/consultation").hasAnyAuthority(DESK_UPDATE.getPermission())
+                                .requestMatchers("/patientDoctor").hasAnyAuthority(PATIENT_READ.getPermission())
                                 .anyRequest()
                                 .authenticated()
                 )

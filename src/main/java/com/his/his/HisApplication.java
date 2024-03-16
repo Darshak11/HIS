@@ -1,15 +1,29 @@
 package com.his.his;
 
+import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Department;
+import com.his.his.models.Employee_Department;
 import com.his.his.repository.DepartmentRepository;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.his.his.models.Patient;
+import com.his.his.models.Patient_Department;
+import com.his.his.models.Patient_Doctor;
+import com.his.his.models.Role;
+import com.his.his.models.User;
+import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
 import com.his.his.models.Patient.Gender;
 import com.his.his.models.Patient.PatientType;
 import com.his.his.repository.PatientRepository;
+import com.his.his.repository.Patient_DoctorRepository;
+import com.his.his.repository.UserRepository;
+import com.his.his.services.Employee_DepartmentService;
+import com.his.his.services.Patient_DepartmentService;
 
 @SpringBootApplication
 // @EnableJpaRepositories(basePackages = {"com.his.his.repository","com.his.his.token"})
@@ -19,8 +33,8 @@ public class HisApplication implements CommandLineRunner {
 		SpringApplication.run(HisApplication.class, args);
 	}
 
-	// @Autowired
-	// private UserRepository employeeRepository;
+	@Autowired
+	private UserRepository employeeRepository;
 
 	@Autowired
 	private PatientRepository patientRepository;
@@ -31,20 +45,34 @@ public class HisApplication implements CommandLineRunner {
 	@Autowired
 	private DepartmentRepository departmentRepository;
 
+	@Autowired
+	private Patient_DoctorRepository patientDoctorRepository;
+
+	@Autowired Patient_DepartmentService patientDepartmentService;
+
+	@Autowired Employee_DepartmentService employeeDepartmentService;
+
 	@Override
 	public void run(String ...args) throws Exception{
-		// User employee=new User();
-		// employee.setDateOfBirth("12/05/12");
-		// employee.setName("Karan");
-		// employee.setLastCheckIn("1:02");
-		// employee.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
-		// User employee1=new User();
-		// employee1.setName("Darshak");
-		// employee1.setDateOfBirth("12/03/12");
-		// employee1.setLastCheckIn("1:02");
-		// employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
-		// employeeRepository.save(employee);
-		// employeeRepository.save(employee1);
+		User employee=new User();
+		employee.setDateOfBirth("12/05/12");
+		employee.setName("Karan");
+		employee.setLastCheckIn("1:02");
+		employee.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
+		employee.setRole(Role.DOCTOR);
+		employee.setPassword("1234");
+
+
+		User employee1=new User();
+		employee1.setName("Darshak");
+		employee1.setDateOfBirth("12/03/12");
+		employee1.setLastCheckIn("1:02");
+		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
+		employee1.setRole(Role.NURSE);
+		employee1.setPassword("1234");
+
+		employeeRepository.save(employee);
+		employeeRepository.save(employee1);
 
 
 		Patient patient=new Patient();
@@ -92,9 +120,47 @@ public class HisApplication implements CommandLineRunner {
 		departmentRepository.save(department1);
 		departmentRepository.save(department2);
 
+		UUID doctorId = employee.getEmployeeId();
+		UUID patientId = patient.getPatientId();
+		User doctor = employeeRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not exist with id " + doctorId));
+        Patient patient1 = patientRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not exist with id " + patientId));
+
+        // Check if the relationship already exists
+        Patient_DoctorId id = new Patient_DoctorId(patientId, doctorId);
+        if (patientDoctorRepository.existsById(id)) {
+            throw new IllegalArgumentException("The relationship between the patient and the doctor already exists");
+        }
+
+        // Create a new relationship and save it
+        Patient_Doctor patientDoctor = new Patient_Doctor();
+        patientDoctor.setId(id);
+        patientDoctor.setPatient(patient1);
+        patientDoctor.setDoctor(doctor);
+        patientDoctorRepository.save(patientDoctor);
+
+
+		Patient_Department patientDepartment = patientDepartmentService.addPatient_Department(patient1.getPatientId(), department1.getDepartmentId());
+
+		Employee_Department doctorDepartment = employeeDepartmentService.addEmployee_Department(doctor.getEmployeeId(), department1.getDepartmentId());
+
+		Employee_Department nurseDepartment = employeeDepartmentService.addEmployee_Department(employee1.getEmployeeId(), department1.getDepartmentId());
+
+
+
 		System.out.println("Patient ID = "+ patient.getPatientId().toString());
 		// System.out.println("Department ID = "+ department1.getDepartmentId().toString());
 		System.out.println("Department ID ="+ department1.getDepartmentId().toString());
+		System.out.println("Doctor ID = "+ doctor.getEmployeeId().toString() + " and the Patient Id = "+ patient1.getPatientId().toString());
+
+
+		System.out.println("Patient ID = "+ patient1.getPatientId().toString() + " and the Department ID = "+ department1.getDepartmentId().toString());
+
+		System.out.println("Doctor ID = " + doctor.getEmployeeId().toString() + " and the Department ID = "+ department1.getDepartmentId().toString());
+
+		System.out.println("Nurse ID = " + employee1.getEmployeeId().toString() + " and the Department ID = "+ department1.getDepartmentId().toString());
+
 	}
 
 }
