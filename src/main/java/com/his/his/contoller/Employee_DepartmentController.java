@@ -24,7 +24,7 @@ public class Employee_DepartmentController {
     private Employee_DepartmentService employeeDepartmentService;
 
     @GetMapping("/getAllEmployeesByDepartmentID/{departmentId}")
-    @PreAuthorize("hasAuthority('employee:read')")
+    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<List<EmployeeRequestDto>> getAllEmployeesByDepartmentID(@PathVariable UUID departmentId) {
         List<EmployeeRequestDto> employees = employeeDepartmentService.getAllEmployeesByDepartmentID(departmentId);
         if(employees.isEmpty()) {
@@ -35,7 +35,7 @@ public class Employee_DepartmentController {
     }
 
     @GetMapping("/getDepartmentByEmployeeID/{employeeId}")
-    @PreAuthorize("hasAuthority('department:read')")
+    @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<DepartmentRequestDto> getDepartmentByEmployeeID(@PathVariable UUID employeeId) {
         return employeeDepartmentService.getDepartmentByEmployeeID(employeeId);
     }

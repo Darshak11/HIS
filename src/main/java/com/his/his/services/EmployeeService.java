@@ -4,6 +4,7 @@ import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.User;
+import com.his.his.repository.Employee_DepartmentRepository;
 import com.his.his.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -24,10 +25,14 @@ import org.springframework.http.ResponseEntity;
 public class EmployeeService {
     @Autowired
     private final UserRepository employeeRepository;
+    
+    @Autowired
+    private final Employee_DepartmentService employee_DepartmentService;
 
     @Autowired
-    public EmployeeService(UserRepository employeeRepository) {
+    public EmployeeService(UserRepository employeeRepository,Employee_DepartmentService employee_DepartmentService) {
         this.employeeRepository = employeeRepository;
+        this.employee_DepartmentService=employee_DepartmentService;
     }
 
     public ResponseEntity<?> signup(EmployeeRegisterDto registerDto) {
@@ -92,7 +97,8 @@ public class EmployeeService {
     public ResponseEntity<HttpStatus> deleteEmployee(UUID id) {
         User employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exists " + id));
-        employeeRepository.delete(employee);
+                // employee_DepartmentService.deleteEmployee(employee);
+                employeeRepository.delete(employee);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

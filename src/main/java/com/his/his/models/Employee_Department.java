@@ -1,7 +1,11 @@
 package com.his.his.models;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.his.his.models.CompositePrimaryKeys.Employee_DepartmentId;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -27,11 +31,12 @@ public class Employee_Department {
 
     @MapsId("employeeId")
     @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
     private User employee;
 
     @MapsId("departmentId")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE,orphanRemoval = true)
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId", insertable = false, updatable = false)
     private Department department;
 }

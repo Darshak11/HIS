@@ -35,7 +35,7 @@ public class Patient_DoctorController {
 
 
     @GetMapping("getAllDoctorsByPatientID/{patientId}")
-    @PreAuthorize("hasAuthority('doctor:read')")
+    @PreAuthorize("hasAuthority('desk:read')")
     public ResponseEntity<List<EmployeeRequestDto>> getAllDoctorsByPatientID(@PathVariable UUID patientId) {
     return patientDoctorService.getAllDoctorsByPatientID(patientId);
     }

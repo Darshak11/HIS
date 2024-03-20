@@ -25,6 +25,7 @@ public class PatientController {
     }
 
     @PostMapping("/signup")
+    @PreAuthorize("hasAuthority('desk:create')")
     public ResponseEntity<?> signup(@RequestBody PatientRegisterDto registerDto) {
             return patientService.signup(registerDto);
         }
@@ -47,7 +48,7 @@ public class PatientController {
     
     //BUILD GET Patient BY ID REST API
     @GetMapping("{id}")
-    @PreAuthorize("hasAuthority('patient:read')")
+    @PreAuthorize("hasAuthority('desk:read')")
     public ResponseEntity<Patient> getPatientId(@PathVariable UUID id){
         Patient patient = patientService.getPatientId(id);
         // logger.debug("Patient found");
@@ -56,7 +57,7 @@ public class PatientController {
 
     // //BUILD UPDATE Patient REST API
     @PutMapping("{id}")
-    @PreAuthorize("hasAuthority('patient:update')")
+    @PreAuthorize("hasAuthority('desk:update')")
     //post mapping vs put mapping. post used to create a resource and put used to update a resource 
     public ResponseEntity<Patient> updatePatient(@PathVariable UUID id,@RequestBody Patient patientDetails){
         Patient updatedPatient = patientService.updatePatient(id, patientDetails);
@@ -78,7 +79,7 @@ public class PatientController {
 
 
     @GetMapping("/transfer/{id}")
-    @PreAuthorize("hasAuthority('patient:update')")
+    @PreAuthorize("hasAuthority('desk:update')")
     public ResponseEntity<Patient> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
         Patient patient = patientService.transferPatient(id, newPatientType);
         // logger.debug("Patient found");
@@ -87,7 +88,7 @@ public class PatientController {
 
     
     @GetMapping("/getPatientId")
-    @PreAuthorize("hasAuthority('patient:read')")
+    @PreAuthorize("hasAuthority('desk:read')")
     public ResponseEntity<List<UUID>> getPatientIdByName(@RequestParam String patientName) {
         return ResponseEntity.ok(patientService.getPatientIdByName(patientName));
     }
