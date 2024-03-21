@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,13 +26,23 @@ public class Patient_DepartmentController {
 
     @GetMapping("/getAllPatientsByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('patient:read')")
-    public ResponseEntity<List<Patient>> getAllPatientsByDepartmentID(@PathVariable UUID departmentId) {
-        return patientDepartmentService.getAllPatientsByDepartmentID(departmentId);
+    public ResponseEntity<?> getAllPatientsByDepartmentID(@PathVariable UUID departmentId) {
+        try {
+            return patientDepartmentService.getAllPatientsByDepartmentID(departmentId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Department not found with id = "+departmentId.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/getAllDepartmentsByPatientID/{patientId}")
     @PreAuthorize("hasAuthority('desk:read')")
-    public ResponseEntity<List<DepartmentRequestDto>> getAllDepartmentsByPatientID(@PathVariable UUID patientId) {
-        return patientDepartmentService.getAllDepartmentsByPatientID(patientId);
+    public ResponseEntity<?> getAllDepartmentsByPatientID(@PathVariable UUID patientId) {
+        try {
+            return patientDepartmentService.getAllDepartmentsByPatientID(patientId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with id = "+patientId.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 }

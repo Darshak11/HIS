@@ -17,56 +17,69 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/department")
 public class DepartmentController {
 
-    @Autowired 
+    @Autowired
     private DepartmentService departmentService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('department:read')")
-    public List<DepartmentRequestDto> getAllDepartment(){
+    public List<DepartmentRequestDto> getAllDepartment() {
         return departmentService.getAllDepartments();
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('department:update')")
-    public DepartmentRequestDto createDepartment(@RequestBody Department department){
+    public DepartmentRequestDto createDepartment(@RequestBody Department department) {
         return departmentService.createDepartment(department);
     }
 
-
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('department:read')")
-    public ResponseEntity<DepartmentRequestDto> getDepartmentId(@PathVariable UUID id){
-        DepartmentRequestDto dto = departmentService.findById(id);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<?> getDepartmentId(@PathVariable UUID id) {
+        try {
+            DepartmentRequestDto dto = departmentService.findById(id);
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Department not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('department:update')")
-    public ResponseEntity<DepartmentRequestDto> updateDepartment(@PathVariable UUID id, @RequestBody Department departmentDetails){
-        DepartmentRequestDto updatedDto = departmentService.updateDepartment(id, departmentDetails); 
-        return ResponseEntity.ok(updatedDto);
+    public ResponseEntity<?> updateDepartment(@PathVariable UUID id,
+            @RequestBody Department departmentDetails) {
+        try {
+            DepartmentRequestDto updatedDto = departmentService.updateDepartment(id, departmentDetails);
+            return ResponseEntity.ok(updatedDto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Department not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('department:delete')")
-    public ResponseEntity<HttpStatus> deleteDepartment(@PathVariable UUID id){
-        return departmentService.deleteDepartment(id);
+    public ResponseEntity<?> deleteDepartment(@PathVariable UUID id) {
+        try {
+            return departmentService.deleteDepartment(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Department not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/getDepartmentId")
     @PreAuthorize("hasAuthority('department:read')")
-    public ResponseEntity<List<UUID>> getDepartmentIdByName(@RequestParam String departmentName) {
-        return ResponseEntity.ok(departmentService.getDepartmentIdByName(departmentName));
+    public ResponseEntity<?> getDepartmentIdByName(@RequestParam String departmentName) {
+        try {
+            return ResponseEntity.ok(departmentService.getDepartmentIdByName(departmentName));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Department not found with name = " + departmentName, HttpStatus.NOT_FOUND);
+        }
+
     }
-
-    /*
-        TODO
-         1. Add doctor and nurse to the department.
-         2. Need to create several models like doctor-department model, nurse-department etc.
-         3. Need to implement list all doctors, nurses, patients in the department etc.
-         4.  Create a function to get department id given a department name. Can reuse this for patient doctor etc. Since id yaad nhi rhegi bt naam yaad rhega. Department and patient ke liye krdiya baaki ka krna baaki hai
-
-    */
-
 
 }

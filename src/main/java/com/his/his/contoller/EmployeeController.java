@@ -23,7 +23,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService){
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
@@ -37,35 +37,52 @@ public class EmployeeController {
     public List<EmployeeRequestDto> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
-    
+
     // //BUILD CREATE EMPLOYEE REST API
     // @PostMapping
     // public Employee createEmployee(@RequestBody Employee employee){
-    //     // logger.debug("Employee added");
-    //     return employeeRepository.save(employee);
+    // // logger.debug("Employee added");
+    // return employeeRepository.save(employee);
     // }
 
-    //BUILD GET EMPLOYEE BY ID REST API
+    // BUILD GET EMPLOYEE BY ID REST API
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<EmployeeRequestDto> getEmployeeId(@PathVariable @NonNull UUID id){
-        EmployeeRequestDto employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<Object> getEmployeeId(@PathVariable @NonNull UUID id) {
+        try {
+            EmployeeRequestDto employee = employeeService.getEmployeeById(id);
+            return ResponseEntity.ok(employee);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Employee not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    //BUILD UPDATE EMPLOYEE REST API
+    // BUILD UPDATE EMPLOYEE REST API
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-    //post mapping vs put mapping. post used to create a resource and put used to update a resource 
-    public ResponseEntity<EmployeeRequestDto> updateEmployee(@PathVariable UUID id,@RequestBody User employeeDetails){
-        EmployeeRequestDto updatedEmployee=employeeService.updateEmployee(id, employeeDetails);
-        return ResponseEntity.ok(updatedEmployee);
+    // post mapping vs put mapping. post used to create a resource and put used to
+    // update a resource
+    public ResponseEntity<Object> updateEmployee(@PathVariable UUID id, @RequestBody User employeeDetails) {
+        try {
+            EmployeeRequestDto updatedEmployee = employeeService.updateEmployee(id, employeeDetails);
+            return ResponseEntity.ok(updatedEmployee);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Employee not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
-    //BUILD DELETE EMPLOYEE REST API
+    // BUILD DELETE EMPLOYEE REST API
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable UUID id){
-        return employeeService.deleteEmployee(id); 
+    public ResponseEntity<?> deleteEmployee(@PathVariable UUID id) {
+        try {
+            return employeeService.deleteEmployee(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Failed to delete employee with id = " + id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -49,21 +50,31 @@ public class PatientController {
     //BUILD GET Patient BY ID REST API
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('desk:read')")
-    public ResponseEntity<Patient> getPatientId(@PathVariable UUID id){
-        Patient patient = patientService.getPatientId(id);
-        // logger.debug("Patient found");
-        return ResponseEntity.ok(patient);
+    public ResponseEntity<?> getPatientId(@PathVariable UUID id){
+        try {
+            Patient patient = patientService.getPatientId(id);
+            // logger.debug("Patient found");
+            return ResponseEntity.ok(patient);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
     // //BUILD UPDATE Patient REST API
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('desk:update')")
     //post mapping vs put mapping. post used to create a resource and put used to update a resource 
-    public ResponseEntity<Patient> updatePatient(@PathVariable UUID id,@RequestBody Patient patientDetails){
-        Patient updatedPatient = patientService.updatePatient(id, patientDetails);
-        patientRepository.save(updatedPatient);
-        // logger.debug("Successfully updated the Patient");
-        return ResponseEntity.ok(updatedPatient);
+    public ResponseEntity<?> updatePatient(@PathVariable UUID id,@RequestBody Patient patientDetails){
+        try {
+            Patient updatedPatient = patientService.updatePatient(id, patientDetails);
+            patientRepository.save(updatedPatient);
+            // logger.debug("Successfully updated the Patient");
+            return ResponseEntity.ok(updatedPatient);    
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
     // //BUILD DELETE Patient REST API
@@ -80,17 +91,27 @@ public class PatientController {
 
     @GetMapping("/transfer/{id}")
     @PreAuthorize("hasAuthority('desk:update')")
-    public ResponseEntity<Patient> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
-        Patient patient = patientService.transferPatient(id, newPatientType);
-        // logger.debug("Patient found");
-        return ResponseEntity.ok(patient);
+    public ResponseEntity<?> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
+        try {
+            Patient patient = patientService.transferPatient(id, newPatientType);
+            // logger.debug("Patient found");
+            return ResponseEntity.ok(patient);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
     
     @GetMapping("/getPatientId")
     @PreAuthorize("hasAuthority('desk:read')")
-    public ResponseEntity<List<UUID>> getPatientIdByName(@RequestParam String patientName) {
-        return ResponseEntity.ok(patientService.getPatientIdByName(patientName));
+    public ResponseEntity<?> getPatientIdByName(@RequestParam String patientName) {
+        try {
+            return ResponseEntity.ok(patientService.getPatientIdByName(patientName));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with name = "+patientName, HttpStatus.NOT_FOUND);
+        }
     }
     
 }
