@@ -101,6 +101,7 @@ public class Employee_DepartmentService {
         } else {
             Department department = employeeDepartment.get(0).getDepartment();
             DepartmentRequestDto dto = new DepartmentRequestDto();
+            dto.setDepartmentId(department.getDepartmentId());
             dto.setDepartmentName(department.getDepartmentName());
             dto.setDepartmentHead(department.getDepartmentHead());
             dto.setNoOfDoctors(department.getNoOfDoctors());

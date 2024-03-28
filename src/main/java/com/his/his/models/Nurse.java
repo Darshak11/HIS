@@ -28,11 +28,11 @@ public class Nurse {
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "departmentId", referencedColumnName = "departmentId", insertable = false, updatable = false)
+    @JoinColumn(name = "departmentId", referencedColumnName = "departmentId", insertable = false)
     private Department department;
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
+    @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false)
     private User headNurse;
 }

@@ -28,7 +28,7 @@ public class Patient_Doctor {
 
    @MapsId("employeeId")
    @ManyToOne
-   @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
+   @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false)
    private User doctor;
 
 }

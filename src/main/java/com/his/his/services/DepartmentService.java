@@ -5,6 +5,8 @@ import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Department;
 import com.his.his.repository.DepartmentRepository;
 
+import jakarta.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class DepartmentService {
 
     @Autowired
@@ -29,11 +32,7 @@ public class DepartmentService {
     public List<DepartmentRequestDto> getAllDepartments(){
         return departmentRepository.findAll().stream()
                 .map(department -> {
-                    DepartmentRequestDto dto = new DepartmentRequestDto();
-                    dto.setDepartmentName(department.getDepartmentName());
-                    dto.setDepartmentHead(department.getDepartmentHead());
-                    dto.setNoOfDoctors(department.getNoOfDoctors());
-                    dto.setNoOfNurses(department.getNoOfNurses());
+                    DepartmentRequestDto dto = convertToDepartmentRequestDto(department);
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -41,6 +40,7 @@ public class DepartmentService {
 
     private DepartmentRequestDto convertToDepartmentRequestDto(Department department) {
         DepartmentRequestDto dto = new DepartmentRequestDto();
+        dto.setDepartmentId(department.getDepartmentId());
         dto.setDepartmentHead(department.getDepartmentHead());
         dto.setDepartmentName(department.getDepartmentName());
         dto.setNoOfDoctors(department.getNoOfDoctors());
@@ -50,7 +50,9 @@ public class DepartmentService {
 
     public DepartmentRequestDto createDepartment(Department department){
         Department savedDepartment = departmentRepository.save(department);
-        return convertToDepartmentRequestDto(savedDepartment);
+        DepartmentRequestDto dto = convertToDepartmentRequestDto(savedDepartment);
+        dto.setDepartmentId(department.getDepartmentId());
+        return dto;
     }
 
     public DepartmentRequestDto findById(UUID id){
@@ -60,12 +62,13 @@ public class DepartmentService {
 
     public DepartmentRequestDto updateDepartment(UUID id, Department departmentDetails){
         Department updatedepartment = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
+
         updatedepartment.setDepartmentHead(departmentDetails.getDepartmentHead());
         updatedepartment.setDepartmentName(departmentDetails.getDepartmentName());
         updatedepartment.setNoOfNurses(departmentDetails.getNoOfNurses());
         updatedepartment.setNoOfDoctors(departmentDetails.getNoOfDoctors());
-        departmentRepository.save(updatedepartment);
-        return convertToDepartmentRequestDto(updatedepartment);
+        Department updatedDepartment= departmentRepository.save(updatedepartment);
+        return convertToDepartmentRequestDto(updatedDepartment);
     }
 
     public ResponseEntity<HttpStatus> deleteDepartment(UUID id){

@@ -31,7 +31,7 @@ public class Department {
     @Column(name = "departmentId",updatable = false, nullable = false )
     private UUID departmentId;
 
-    @Column(updatable = false, nullable= false)
+    @Column(nullable= false)
     private String departmentName;
 
     @Column(nullable = false)

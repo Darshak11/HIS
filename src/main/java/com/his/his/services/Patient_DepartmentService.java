@@ -78,6 +78,7 @@ public class Patient_DepartmentService {
 
         List<DepartmentRequestDto> departments = patientDepartment.stream().map(Patient_Department::getDepartment).map(department -> {
             DepartmentRequestDto dto = new DepartmentRequestDto();
+            dto.setDepartmentId(department.getDepartmentId());
             dto.setDepartmentName(department.getDepartmentName());
             dto.setDepartmentHead(department.getDepartmentHead());
             dto.setNoOfDoctors(department.getNoOfDoctors());
