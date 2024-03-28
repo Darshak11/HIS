@@ -25,14 +25,14 @@ import org.springframework.http.ResponseEntity;
 public class EmployeeService {
     @Autowired
     private final UserRepository employeeRepository;
-    
+
     @Autowired
     private final Employee_DepartmentService employee_DepartmentService;
 
     @Autowired
-    public EmployeeService(UserRepository employeeRepository,Employee_DepartmentService employee_DepartmentService) {
+    public EmployeeService(UserRepository employeeRepository, Employee_DepartmentService employee_DepartmentService) {
         this.employeeRepository = employeeRepository;
-        this.employee_DepartmentService=employee_DepartmentService;
+        this.employee_DepartmentService = employee_DepartmentService;
     }
 
     public ResponseEntity<?> signup(EmployeeRegisterDto registerDto) {
@@ -66,15 +66,15 @@ public class EmployeeService {
 
     public EmployeeRequestDto getEmployeeById(UUID id) {
         Optional<User> userOptional = employeeRepository.findById(id);
-    
+
         if (!userOptional.isPresent()) {
             // Handle the case where no user with the given ID exists.
             // This could be throwing an exception, returning a default value, etc.
             throw new ResourceNotFoundException("Employee not exists " + id);
         }
-    
+
         User user = userOptional.get();
-    
+
         EmployeeRequestDto userDto = new EmployeeRequestDto();
         userDto.setEmployeeId(user.getEmployeeId());
         userDto.setName(user.getName());
@@ -82,38 +82,46 @@ public class EmployeeService {
         userDto.setLastCheckIn(user.getLastCheckIn());
         userDto.setEmployeeStatus(user.getEmployeeStatus());
         // set other fields
-    
+
         return userDto;
     }
 
     public EmployeeRequestDto updateEmployee(UUID id, User employeeDetails) {
-        EmployeeRequestDto updateEmployee = getEmployeeById(id);
-        updateEmployee.setName(employeeDetails.getName());
-        updateEmployee.setDateOfBirth(employeeDetails.getDateOfBirth());
-        updateEmployee.setEmployeeStatus(employeeDetails.getEmployeeStatus());
-        return updateEmployee;
+        User employee = employeeRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
+
+        // Update the employee's fields
+        employee.setName(employeeDetails.getName());
+        employee.setDateOfBirth(employeeDetails.getDateOfBirth());
+        employee.setEmployeeStatus(employeeDetails.getEmployeeStatus());
+
+        // Save the updated employee back to the database
+        User updatedEmployee = employeeRepository.save(employee);
+
+        // Convert the updated Employee entity to EmployeeRequestDto and return it
+        EmployeeRequestDto updatedEmployeeDto=getEmployeeById(id); /* convert updatedEmployee to EmployeeRequestDto */;
+        return updatedEmployeeDto;
     }
 
     public ResponseEntity<HttpStatus> deleteEmployee(UUID id) {
         User employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exists " + id));
-                // employee_DepartmentService.deleteEmployee(employee);
-                employeeRepository.delete(employee);
+        // employee_DepartmentService.deleteEmployee(employee);
+        employeeRepository.delete(employee);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    public List<UUID> getEmployeeIdByName(String employeeName){
-        List<UUID> emplIds=new ArrayList<>();
-        List<User> employees=employeeRepository.findByName(employeeName);
+    public List<UUID> getEmployeeIdByName(String employeeName) {
+        List<UUID> emplIds = new ArrayList<>();
+        List<User> employees = employeeRepository.findByName(employeeName);
 
-        if(!employees.isEmpty()){
-            for(User user:employees){
+        if (!employees.isEmpty()) {
+            for (User user : employees) {
                 emplIds.add(user.getEmployeeId());
             }
             return emplIds;
-        }
-        else{
-            throw new ResourceNotFoundException("Employees with name "+employeeName+" not found");
+        } else {
+            throw new ResourceNotFoundException("Employees with name " + employeeName + " not found");
         }
     }
 }
