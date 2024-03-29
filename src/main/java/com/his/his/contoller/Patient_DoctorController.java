@@ -50,4 +50,26 @@ public class Patient_DoctorController {
             return new ResponseEntity<>("Patient not found with id = "+patientId.toString(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("getAllInpatientsByDoctorID/{doctorId}")
+    @PreAuthorize("hasAuthority('doctor:read')")
+    public ResponseEntity<?> getAllInpatientsByDoctorID(@PathVariable UUID doctorId) {
+        try {
+            return patientDoctorService.getAllInpatientsByDoctorID(doctorId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Doctor not found with id = "+doctorId.toString(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("getAllOutpatientsByDoctorID/{doctorId}")
+    @PreAuthorize("hasAuthority('doctor:read')")
+    public ResponseEntity<?> getAllOutpatientsByDoctorID(@PathVariable UUID doctorId) {
+        try {
+            return patientDoctorService.getAllOutpatientsByDoctorID(doctorId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Doctor not found with id = "+doctorId.toString(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

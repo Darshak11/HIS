@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Patient;
+import com.his.his.models.Patient.PatientType;
 import com.his.his.models.Patient_Doctor;
 import com.his.his.models.User;
 import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
@@ -100,4 +101,36 @@ public class Patient_DoctorService {
             return ResponseEntity.ok(doctors);
         }
     }
+
+    public ResponseEntity<?> getAllInpatientsByDoctorID(UUID doctorId) {
+        User doctor = getDoctorById(doctorId);
+        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findPatientsByDoctor(doctor);
+
+        List<Patient> patients = patient_Doctor.stream()
+        .map(Patient_Doctor::getPatient)
+        .filter(patient -> patient.getPatientType() == PatientType.INPATIENT)
+        .toList();
+        if (patients.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(patients);
+        }
+    }
+
+    public ResponseEntity<?> getAllOutpatientsByDoctorID(UUID doctorId) {
+        User doctor = getDoctorById(doctorId);
+        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findPatientsByDoctor(doctor);
+
+        List<Patient> patients = patient_Doctor.stream()
+        .map(Patient_Doctor::getPatient)
+        .filter(patient -> patient.getPatientType() == PatientType.OUTPATIENT)
+        .toList();
+        if (patients.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(patients);
+        }
+    }
+
+    
 }

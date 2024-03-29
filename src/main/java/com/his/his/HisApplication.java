@@ -28,7 +28,6 @@ import com.his.his.services.Employee_DepartmentService;
 import com.his.his.services.Patient_DepartmentService;
 
 @SpringBootApplication
-// @EnableJpaRepositories(basePackages = {"com.his.his.repository","com.his.his.token"})
 public class HisApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
@@ -87,7 +86,8 @@ public class HisApplication implements CommandLineRunner {
 		patient.setDateOfBirth("12/06/2002");
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
-		patient.setPatientType(PatientType.INPATIENT);
+		patient.setPatientType(PatientType.OUTPATIENT);
+		patient.setAge(15);
 
 		// Patient patient1=new Patient();
 		// patient1.setName("Darshak");

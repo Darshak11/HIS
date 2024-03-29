@@ -16,4 +16,6 @@ public interface Patient_DoctorRepository extends JpaRepository<Patient_Doctor, 
 
     List<Patient_Doctor> findDoctorsByPatient(Patient patient);
 
+    
+
 }

@@ -72,4 +72,8 @@ public class Patient
     @Enumerated(EnumType.STRING)
     private DischargeStatus dischargeStatus;
 
+    @Column(name="age",nullable =false)
+    private int age;
+    
+
 }

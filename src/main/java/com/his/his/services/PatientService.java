@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 // import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class PatientService {
         patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
         patient.setPatientType(patientRegisterDto.getPatientType());
+        patient.setAge(patientRegisterDto.getAge());
 
         //Put this in Exception block for handling failure
         patientRepository.save(patient);
@@ -50,8 +52,11 @@ public class PatientService {
     } 
 
     public Patient getPatientId(UUID id){
-        Patient patient=patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient not exist with id "+id)) ;
-        return patient;
+        Optional <Patient> patientOptional=patientRepository.findById(id);
+        if(!patientOptional.isPresent()){
+            throw new ResourceNotFoundException("Patient not found with id = "+id);
+        }
+        return patientOptional.get();
     }
 
     public Patient updatePatient(UUID id,Patient patientDetails){
@@ -64,6 +69,7 @@ public class PatientService {
         updatePatient.setEmergencyContactNumber(patientDetails.getEmergencyContactNumber());
         updatePatient.setGender(patientDetails.getGender());
         updatePatient.setPatientType(patientDetails.getPatientType());
+        updatePatient.setAge(patientDetails.getAge());
         return updatePatient;
     }
 
