@@ -4,7 +4,6 @@ import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.User;
-import com.his.his.repository.Employee_DepartmentRepository;
 import com.his.his.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -27,12 +26,8 @@ public class EmployeeService {
     private final UserRepository employeeRepository;
 
     @Autowired
-    private final Employee_DepartmentService employee_DepartmentService;
-
-    @Autowired
     public EmployeeService(UserRepository employeeRepository, Employee_DepartmentService employee_DepartmentService) {
         this.employeeRepository = employeeRepository;
-        this.employee_DepartmentService = employee_DepartmentService;
     }
 
     public ResponseEntity<?> signup(EmployeeRegisterDto registerDto) {

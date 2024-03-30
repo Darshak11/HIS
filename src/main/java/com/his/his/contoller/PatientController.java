@@ -40,6 +40,18 @@ public class PatientController {
         return patientService.getAllPatients();
     }
 
+    @GetMapping("/allInpatients")
+    @PreAuthorize("hasAuthority('desk:read')")
+    public List<Patient> getAllInpatients() {
+        return patientService.getAllInpatients();
+    }
+
+    @GetMapping("/allOutpatients")
+    @PreAuthorize("hasAuthority('desk:read')")
+    public List<Patient> getAllOutpatients() {
+        return patientService.getAllOutpatients();
+    }
+
     // //BUILD CREATE Patient REST API
     // @PostMapping
     // public Patient createPatient(@RequestBody Patient patient){

@@ -3,6 +3,7 @@ package com.his.his.services;
 import com.his.his.dto.PatientRegisterDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Patient;
+import com.his.his.models.Patient.PatientType;
 import com.his.his.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 
@@ -50,6 +51,14 @@ public class PatientService {
     public List<Patient> getAllPatients(){
         return patientRepository.findAll();
     } 
+
+    public List<Patient> getAllInpatients() {
+        return patientRepository.findByPatientType(PatientType.INPATIENT);
+    }
+
+    public List<Patient> getAllOutpatients() {
+        return patientRepository.findByPatientType(PatientType.OUTPATIENT);
+    }
 
     public Patient getPatientId(UUID id){
         Optional <Patient> patientOptional=patientRepository.findById(id);
