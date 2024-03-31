@@ -92,6 +92,7 @@ public class Patient_DoctorService {
             dto.setDateOfBirth(doctor.getDateOfBirth());
             dto.setLastCheckIn(doctor.getLastCheckIn());
             dto.setEmployeeStatus(doctor.getEmployeeStatus());
+            dto.setEmployeeType(doctor.getEmployeeType());
             return dto;
         }).toList();
 

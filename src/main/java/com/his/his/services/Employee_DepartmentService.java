@@ -85,6 +85,7 @@ public class Employee_DepartmentService {
                     dto.setDateOfBirth(employee.getDateOfBirth());
                     dto.setLastCheckIn(employee.getLastCheckIn());
                     dto.setEmployeeStatus(employee.getEmployeeStatus());
+                    dto.setEmployeeType(employee.getEmployeeType());
                     return dto;
                 }).toList();
 
@@ -125,6 +126,7 @@ public class Employee_DepartmentService {
                     dto.setDateOfBirth(employee.getDateOfBirth());
                     dto.setLastCheckIn(employee.getLastCheckIn());
                     dto.setEmployeeStatus(employee.getEmployeeStatus());
+                    dto.setEmployeeType(employee.getEmployeeType());
                     return dto;
                 }).toList();
 
@@ -146,6 +148,7 @@ public class Employee_DepartmentService {
                     dto.setDateOfBirth(employee.getDateOfBirth());
                     dto.setLastCheckIn(employee.getLastCheckIn());
                     dto.setEmployeeStatus(employee.getEmployeeStatus());
+                    dto.setEmployeeType(employee.getEmployeeType());
                     return dto;
                 }).toList();
 

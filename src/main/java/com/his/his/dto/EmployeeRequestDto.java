@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import com.his.his.models.User.EmployeeStatus;
+import com.his.his.models.User.EmployeeType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class EmployeeRequestDto implements Serializable
     String dateOfBirth;
     String lastCheckIn;
     EmployeeStatus employeeStatus;
+    EmployeeType employeeType;
 }

@@ -1,6 +1,7 @@
 package com.his.his.repository;
 
 import com.his.his.models.User;
+import com.his.his.models.User.EmployeeType;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +13,7 @@ public interface UserRepository extends JpaRepository<User,UUID> {
     Optional<User> findByEmployeeId(UUID employeeId);
 
     List<User> findByName(String employeeName);
+
+    List<User> findByEmployeeType(EmployeeType employeeType);
 }
 

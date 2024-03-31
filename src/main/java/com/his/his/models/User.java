@@ -31,6 +31,15 @@ public class User implements UserDetails
         CHECKED_IN, CHECKED_OUT
     }
 
+    public enum EmployeeType{
+        NURSE,
+        DOCTOR,
+        HEAD_NURSE,
+        PHARMACIST,
+        ADMIN,
+        ADMISSION_DESK
+    }
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -55,6 +64,9 @@ public class User implements UserDetails
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private EmployeeType employeeType;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @JsonManagedReference

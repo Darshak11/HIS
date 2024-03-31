@@ -54,9 +54,20 @@ public class EmployeeController {
             return ResponseEntity.ok(employee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Employee not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Employee not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
         }
+    }
 
+    @GetMapping("/getAllDoctors")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public List<EmployeeRequestDto> getAllDoctors() {
+        return employeeService.getAllDoctors();
+    }
+
+    @GetMapping("/getAllNurses")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public List<EmployeeRequestDto> getAllNurses() {
+        return employeeService.getAllNurses();
     }
 
     // BUILD UPDATE EMPLOYEE REST API
@@ -70,7 +81,7 @@ public class EmployeeController {
             return ResponseEntity.ok(updatedEmployee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Employee not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Employee not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
         }
     }
 

@@ -4,6 +4,7 @@ import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.User;
+import com.his.his.models.User.EmployeeType;
 import com.his.his.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -44,15 +45,41 @@ public class EmployeeService {
         return new ResponseEntity<>("Patient Registered Successfully", HttpStatus.OK);
     }
 
+    public EmployeeRequestDto convertEmployeeToDto(User employee){
+        EmployeeRequestDto dto = new EmployeeRequestDto();
+        dto.setEmployeeId(employee.getEmployeeId());
+        dto.setName(employee.getName());
+        dto.setDateOfBirth(employee.getDateOfBirth());
+        dto.setLastCheckIn(employee.getLastCheckIn());
+        dto.setEmployeeStatus(employee.getEmployeeStatus());
+        dto.setEmployeeType(employee.getEmployeeType());
+        return dto;
+    }
+
     public List<EmployeeRequestDto> getAllEmployees() {
         return employeeRepository.findAll().stream()
                 .map(user -> {
-                    EmployeeRequestDto dto = new EmployeeRequestDto();
-                    dto.setEmployeeId(user.getEmployeeId());
-                    dto.setName(user.getName());
-                    dto.setDateOfBirth(user.getDateOfBirth());
-                    dto.setLastCheckIn(user.getLastCheckIn());
-                    dto.setEmployeeStatus(user.getEmployeeStatus());
+                    EmployeeRequestDto dto = convertEmployeeToDto(user);
+                    // set other fields
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<EmployeeRequestDto> getAllDoctors() {
+        return employeeRepository.findByEmployeeType(EmployeeType.DOCTOR).stream()
+                .map(user -> {
+                    EmployeeRequestDto dto = convertEmployeeToDto(user);
+                    // set other fields
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<EmployeeRequestDto> getAllNurses() {
+        return employeeRepository.findByEmployeeType(EmployeeType.NURSE).stream()
+                .map(user -> {
+                    EmployeeRequestDto dto = convertEmployeeToDto(user);
                     // set other fields
                     return dto;
                 })
@@ -76,6 +103,7 @@ public class EmployeeService {
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setLastCheckIn(user.getLastCheckIn());
         userDto.setEmployeeStatus(user.getEmployeeStatus());
+        userDto.setEmployeeType(user.getEmployeeType());
         // set other fields
 
         return userDto;
@@ -83,18 +111,20 @@ public class EmployeeService {
 
     public EmployeeRequestDto updateEmployee(UUID id, User employeeDetails) {
         User employee = employeeRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
 
         // Update the employee's fields
         employee.setName(employeeDetails.getName());
         employee.setDateOfBirth(employeeDetails.getDateOfBirth());
         employee.setEmployeeStatus(employeeDetails.getEmployeeStatus());
+        employee.setEmployeeType(employeeDetails.getEmployeeType());
 
         // Save the updated employee back to the database
         User updatedEmployee = employeeRepository.save(employee);
 
         // Convert the updated Employee entity to EmployeeRequestDto and return it
-        EmployeeRequestDto updatedEmployeeDto=getEmployeeById(id); /* convert updatedEmployee to EmployeeRequestDto */;
+        EmployeeRequestDto updatedEmployeeDto = getEmployeeById(id);
+        /* convert updatedEmployee to EmployeeRequestDto */;
         return updatedEmployeeDto;
     }
 

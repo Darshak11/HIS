@@ -21,6 +21,7 @@ import com.his.his.models.User;
 import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
 import com.his.his.models.Patient.Gender;
 import com.his.his.models.Patient.PatientType;
+import com.his.his.models.User.EmployeeType;
 import com.his.his.repository.PatientRepository;
 import com.his.his.repository.Patient_DoctorRepository;
 import com.his.his.repository.UserRepository;
@@ -64,6 +65,7 @@ public class HisApplication implements CommandLineRunner {
 		employee.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
 		employee.setRole(Role.DOCTOR);
 		employee.setPassword(encoder.encode("1234"));
+		employee.setEmployeeType(EmployeeType.DOCTOR);
 
 
 		User employee1=new User();
@@ -73,6 +75,7 @@ public class HisApplication implements CommandLineRunner {
 		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
 		employee1.setRole(Role.NURSE);
 		employee1.setPassword(encoder.encode("1234"));
+		employee1.setEmployeeType(EmployeeType.NURSE);
 
 		employeeRepository.save(employee);
 		employeeRepository.save(employee1);
