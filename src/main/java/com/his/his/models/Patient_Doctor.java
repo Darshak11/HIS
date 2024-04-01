@@ -16,19 +16,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name="patient_doctor")
+@Table(name = "patient_doctor")
 public class Patient_Doctor {
    @EmbeddedId
    private Patient_DoctorId id;
 
-   @MapsId("patientId")
    @ManyToOne
    @JoinColumn(name = "patientId", referencedColumnName = "patientId", insertable = false, updatable = false)
    private Patient patient;
 
-   @MapsId("employeeId")
    @ManyToOne
-   @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false)
+   @JoinColumn(name = "employeeId", referencedColumnName = "employeeId", insertable = false, updatable = false)
    private User doctor;
-
 }

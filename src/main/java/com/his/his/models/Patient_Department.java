@@ -26,13 +26,11 @@ public class Patient_Department {
     @EmbeddedId
     private Patient_DepartmentId id;
     
-    @MapsId("patientId")
     @ManyToOne
     @JoinColumn(name = "patientId", referencedColumnName = "patientId", insertable = false, updatable = false)
     private Patient patient;
 
-    @MapsId("departmentId")
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId", insertable = false, updatable = false)
     private Department department;
 }

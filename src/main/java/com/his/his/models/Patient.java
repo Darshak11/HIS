@@ -1,6 +1,8 @@
 package com.his.his.models;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -75,5 +77,7 @@ public class Patient
     @Column(name="age",nullable =false)
     private int age;
     
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE)
+    private List<Patient_Department> patientDepartments;
 
 }

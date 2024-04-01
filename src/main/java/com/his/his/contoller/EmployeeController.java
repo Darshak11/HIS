@@ -92,7 +92,7 @@ public class EmployeeController {
         try {
             return employeeService.deleteEmployee(id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
             return new ResponseEntity<>("Failed to delete employee with id = " + id.toString(), HttpStatus.NOT_FOUND);
         }
     }

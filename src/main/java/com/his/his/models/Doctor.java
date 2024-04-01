@@ -17,12 +17,12 @@ public class Doctor{
     @EmbeddedId
     private DoctorId id;
 
-    @JoinColumn(name="users", referencedColumnName = "employeeId",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name="users", referencedColumnName = "employeeId",nullable = false)
     @MapsId("employeeId")
     private User doctor;
 
     @ManyToOne
-    @JoinColumn(name="department", referencedColumnName = "departmentId",nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name="department", referencedColumnName = "departmentId",nullable = false)
     @MapsId("departmentId")
     private Department department;
 
