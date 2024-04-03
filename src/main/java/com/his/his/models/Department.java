@@ -7,8 +7,11 @@ import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.his.his.converter.ObjectCryptoConverter;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -35,9 +38,11 @@ public class Department {
     @Column(name = "departmentId", updatable = false, nullable = false)
     private UUID departmentId;
 
+    @Convert(converter = ObjectCryptoConverter.class)
     @Column(nullable = false)
     private String departmentName;
 
+    @Convert(converter = ObjectCryptoConverter.class)
     @Column(nullable = false)
     private String departmentHead;
 
