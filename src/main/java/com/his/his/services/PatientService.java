@@ -1,6 +1,7 @@
 package com.his.his.services;
 
 import com.his.his.dto.PatientRegisterDto;
+import com.his.his.dto.PatientRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Patient;
 import com.his.his.models.Patient.PatientType;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,27 +50,55 @@ public class PatientService {
         return new ResponseEntity<>("Patient Registered Successfully",HttpStatus.OK);
     }
 
-    public List<Patient> getAllPatients(){
-        return patientRepository.findAll();
+    public PatientRequestDto convertPatientToDto(Patient patient){
+        PatientRequestDto dto = new PatientRequestDto();
+        dto.setPatientId(patient.getPatientId());
+        dto.setName(patient.getName());
+        dto.setAabhaId(patient.getAabhaId());
+        dto.setAadharId(patient.getAadharId());
+        dto.setEmailId(patient.getEmailId());
+        dto.setDateOfBirth(patient.getDateOfBirth());
+        dto.setEmergencyContactNumber(patient.getEmergencyContactNumber());
+        dto.setGender(patient.getGender());
+        dto.setPatientType(patient.getPatientType());
+        dto.setDischargeStatus(patient.getDischargeStatus());
+        dto.setAge(patient.getAge());
+        return dto;
+    }
+
+    public List<PatientRequestDto> getAllPatients(){
+        return patientRepository.findAll().stream()
+        .map(patient ->{
+            PatientRequestDto dto = convertPatientToDto(patient);
+            return dto;
+        }).collect(Collectors.toList());
     } 
 
-    public List<Patient> getAllInpatients() {
-        return patientRepository.findByPatientType(PatientType.INPATIENT);
+    public List<PatientRequestDto> getAllInpatients() {
+        return patientRepository.findByPatientType(PatientType.INPATIENT).stream()
+        .map(patient ->{
+            PatientRequestDto dto = convertPatientToDto(patient);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
-    public List<Patient> getAllOutpatients() {
-        return patientRepository.findByPatientType(PatientType.OUTPATIENT);
+    public List<PatientRequestDto> getAllOutpatients() {
+        return patientRepository.findByPatientType(PatientType.OUTPATIENT).stream()
+        .map(patient ->{
+            PatientRequestDto dto = convertPatientToDto(patient);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
-    public Patient getPatientId(UUID id){
+    public PatientRequestDto getPatientId(UUID id){
         Optional <Patient> patientOptional=patientRepository.findById(id);
         if(!patientOptional.isPresent()){
             throw new ResourceNotFoundException("Patient not found with id = "+id);
         }
-        return patientOptional.get();
+        return convertPatientToDto(patientOptional.get());
     }
 
-    public Patient updatePatient(UUID id,Patient patientDetails){
+    public PatientRequestDto updatePatient(UUID id,Patient patientDetails){
         Patient updatePatient = patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient does not exist with id "+id));
         updatePatient.setName(patientDetails.getName());
         updatePatient.setAabhaId(patientDetails.getAabhaId());
@@ -79,14 +109,15 @@ public class PatientService {
         updatePatient.setGender(patientDetails.getGender());
         updatePatient.setPatientType(patientDetails.getPatientType());
         updatePatient.setAge(patientDetails.getAge());
-        return updatePatient;
+        Patient updatedPatient = patientRepository.save(updatePatient);
+        return getPatientId(id);
     }
 
-    public Patient transferPatient(UUID id,Patient.PatientType newPatientType){
+    public PatientRequestDto transferPatient(UUID id,Patient.PatientType newPatientType){
         Patient patient=patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient not exist with id "+id)) ;
         patient.setPatientType(newPatientType);
         patientRepository.save(patient);
-        return patient;
+        return convertPatientToDto(patient);
     }
 
     public List<UUID> getPatientIdByName(String patientName) {

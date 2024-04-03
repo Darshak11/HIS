@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.his.his.converter.ObjectCryptoConverter;
 import com.his.his.token.Token;
 
 import lombok.AllArgsConstructor;
@@ -24,12 +25,13 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails
+{
     public enum EmployeeStatus {
         CHECKED_IN, CHECKED_OUT
     }
 
-    public enum EmployeeType {
+    public enum EmployeeType{
         NURSE,
         DOCTOR,
         HEAD_NURSE,
@@ -41,19 +43,21 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "employeeId", updatable = false, nullable = false)
-    private UUID employeeId;
-
+    @Column(name = "employeeId", updatable = false, nullable = false )
+    private UUID employeeId; 
+    
+    @Convert(converter = ObjectCryptoConverter.class) 
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @Column(name = "DateOfBirth", nullable = false)
+    @Column(name = "DateOfBirth", nullable = false )
     private String dateOfBirth;
 
-    @Column(name = "Password", nullable = false)
+    @Column(name="Password", nullable = false)
     private String password;
 
-    @Column(name = "LastCheckIn")
+    @Convert(converter = ObjectCryptoConverter.class) 
+    @Column(name = "LastCheckIn" )
     private String lastCheckIn;
 
     @Column(name = "status")
@@ -66,15 +70,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private EmployeeType employeeType;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Token> tokens;
-
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.REMOVE)
-    private Employee_Department employeeDepartment;
-
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
-    private List<Patient_Doctor> patientDoctors;
 
     // Implementing UserDetails methods
     @Override
@@ -89,6 +87,7 @@ public class User implements UserDetails {
         return true;
     }
 
+
     @Override
     public boolean isCredentialsNonExpired() {
         // Add your implementation here
@@ -100,7 +99,6 @@ public class User implements UserDetails {
         // Add your implementation here
         return role.getAuthorities();
     }
-
     @Override
     public boolean isAccountNonExpired() {
         // Add your implementation here

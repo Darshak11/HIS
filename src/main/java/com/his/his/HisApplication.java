@@ -89,7 +89,7 @@ public class HisApplication implements CommandLineRunner {
 		patient.setDateOfBirth("12/06/2002");
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
-		patient.setPatientType(PatientType.OUTPATIENT);
+		patient.setPatientType(PatientType.INPATIENT);
 		patient.setAge(15);
 
 		// Patient patient1=new Patient();

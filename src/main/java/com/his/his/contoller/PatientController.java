@@ -1,6 +1,7 @@
 package com.his.his.contoller;
 
 import com.his.his.dto.PatientRegisterDto;
+import com.his.his.dto.PatientRequestDto;
 import com.his.his.models.Patient;
 import com.his.his.repository.PatientRepository;
 import com.his.his.services.PatientService;
@@ -36,19 +37,19 @@ public class PatientController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('desk:read')")
-    public List<Patient> getAllPatients(){
+    public List<PatientRequestDto> getAllPatients(){
         return patientService.getAllPatients();
     }
 
     @GetMapping("/allInpatients")
     @PreAuthorize("hasAuthority('desk:read')")
-    public List<Patient> getAllInpatients() {
+    public List<PatientRequestDto> getAllInpatients() {
         return patientService.getAllInpatients();
     }
 
     @GetMapping("/allOutpatients")
     @PreAuthorize("hasAuthority('desk:read')")
-    public List<Patient> getAllOutpatients() {
+    public List<PatientRequestDto> getAllOutpatients() {
         return patientService.getAllOutpatients();
     }
 
@@ -64,7 +65,7 @@ public class PatientController {
     @PreAuthorize("hasAuthority('desk:read')")
     public ResponseEntity<?> getPatientId(@PathVariable UUID id){
         try {
-            Patient patient = patientService.getPatientId(id);
+            PatientRequestDto patient = patientService.getPatientId(id);
             // logger.debug("Patient found");
             return ResponseEntity.ok(patient);
         } catch (Exception e) {
@@ -79,8 +80,7 @@ public class PatientController {
     //post mapping vs put mapping. post used to create a resource and put used to update a resource 
     public ResponseEntity<?> updatePatient(@PathVariable UUID id,@RequestBody Patient patientDetails){
         try {
-            Patient updatedPatient = patientService.updatePatient(id, patientDetails);
-            patientRepository.save(updatedPatient);
+            PatientRequestDto updatedPatient = patientService.updatePatient(id, patientDetails);
             // logger.debug("Successfully updated the Patient");
             return ResponseEntity.ok(updatedPatient);    
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class PatientController {
     @PreAuthorize("hasAuthority('desk:update')")
     public ResponseEntity<?> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
         try {
-            Patient patient = patientService.transferPatient(id, newPatientType);
+            PatientRequestDto patient = patientService.transferPatient(id, newPatientType);
             // logger.debug("Patient found");
             return ResponseEntity.ok(patient);
         } catch (Exception e) {
