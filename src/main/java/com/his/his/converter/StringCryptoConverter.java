@@ -35,7 +35,7 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
         // Initialize the encryptor with the encryption password from the environment 
         this.encryptor = new StandardPBEStringEncryptor(); 
         this.encryptor.setPassword(environment.getProperty(ENCRYPTION_PASSWORD_PROPERTY)); 
-        this.encryptor.setAlgorithm("PBEWITHHMACSHA512ANDAES_256");
+        // this.encryptor.setAlgorithm("PBEWITHHMACSHA512ANDAES_256");
     } 
   
     /** 

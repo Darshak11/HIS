@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.his.his.converter.ObjectCryptoConverter;
+import com.his.his.converter.StringCryptoConverter;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,11 +39,11 @@ public class Department {
     @Column(name = "departmentId", updatable = false, nullable = false)
     private UUID departmentId;
 
-    @Convert(converter = ObjectCryptoConverter.class)
+    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String departmentName;
 
-    @Convert(converter = ObjectCryptoConverter.class)
+    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String departmentHead;
 

@@ -38,7 +38,7 @@ public class DepartmentService {
                 .collect(Collectors.toList());
     }
 
-    private DepartmentRequestDto convertToDepartmentRequestDto(Department department) {
+    public DepartmentRequestDto convertToDepartmentRequestDto(Department department) {
         DepartmentRequestDto dto = new DepartmentRequestDto();
         dto.setDepartmentId(department.getDepartmentId());
         dto.setDepartmentHead(department.getDepartmentHead());
