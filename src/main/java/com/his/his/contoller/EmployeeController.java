@@ -70,6 +70,12 @@ public class EmployeeController {
         return employeeService.getAllNurses();
     }
 
+    @GetMapping("/getAllHeadNurses")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public List<EmployeeRequestDto> getAllHeadNurses() {
+        return employeeService.getAllHeadNurses();
+    }
+
     // BUILD UPDATE EMPLOYEE REST API
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('admin:update')")

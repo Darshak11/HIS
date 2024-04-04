@@ -45,7 +45,7 @@ public class EmployeeService {
         return new ResponseEntity<>("Patient Registered Successfully", HttpStatus.OK);
     }
 
-    public EmployeeRequestDto convertEmployeeToDto(User employee){
+    public EmployeeRequestDto convertEmployeeToDto(User employee) {
         EmployeeRequestDto dto = new EmployeeRequestDto();
         dto.setEmployeeId(employee.getEmployeeId());
         dto.setName(employee.getName());
@@ -67,7 +67,8 @@ public class EmployeeService {
     }
 
     public List<EmployeeRequestDto> getAllDoctors() {
-        return employeeRepository.findByEmployeeType(EmployeeType.DOCTOR).stream()
+        return employeeRepository.findAll().stream()
+                .filter(employee -> employee.getEmployeeType() == EmployeeType.DOCTOR)
                 .map(user -> {
                     EmployeeRequestDto dto = convertEmployeeToDto(user);
                     // set other fields
@@ -77,7 +78,19 @@ public class EmployeeService {
     }
 
     public List<EmployeeRequestDto> getAllNurses() {
-        return employeeRepository.findByEmployeeType(EmployeeType.NURSE).stream()
+        return employeeRepository.findAll().stream()
+                .filter(employee -> employee.getEmployeeType() == EmployeeType.NURSE)
+                .map(user -> {
+                    EmployeeRequestDto dto = convertEmployeeToDto(user);
+                    // set other fields
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<EmployeeRequestDto> getAllHeadNurses() {
+        return employeeRepository.findAll().stream()
+                .filter(employee -> employee.getEmployeeType() == EmployeeType.HEAD_NURSE)
                 .map(user -> {
                     EmployeeRequestDto dto = convertEmployeeToDto(user);
                     // set other fields

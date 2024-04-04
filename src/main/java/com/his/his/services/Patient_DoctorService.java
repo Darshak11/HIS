@@ -2,6 +2,7 @@ package com.his.his.services;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.his.his.dto.EmployeeRequestDto;
+import com.his.his.dto.PatientRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Patient;
 import com.his.his.models.Patient.PatientType;
@@ -31,10 +33,17 @@ public class Patient_DoctorService {
     private final UserRepository employeeRepository;
 
     @Autowired
-    private final PatientRepository patientRepository ;
+    private final PatientRepository patientRepository;
 
     @Autowired
-    public Patient_DoctorService(Patient_DoctorRepository patientDoctorRepository, UserRepository employeeRepository, PatientRepository patientRepository) {
+    private PatientService patientService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    public Patient_DoctorService(Patient_DoctorRepository patientDoctorRepository, UserRepository employeeRepository,
+            PatientRepository patientRepository) {
         this.patientDoctorRepository = patientDoctorRepository;
         this.employeeRepository = employeeRepository;
         this.patientRepository = patientRepository;
@@ -66,7 +75,7 @@ public class Patient_DoctorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id " + id));
     }
 
-    public ResponseEntity<List<Patient>> getAllPatientsByDoctorID(UUID doctorId) {
+    public ResponseEntity<?> getAllPatientsByDoctorID(UUID doctorId) {
         User doctor = getDoctorById(doctorId);
         List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findPatientsByDoctor(doctor);
 
@@ -74,7 +83,12 @@ public class Patient_DoctorService {
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(patients);
+            return ResponseEntity.ok(
+                    patients.stream()
+                            .map(patient -> {
+                                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                                return dto;
+                            }).collect(Collectors.toList()));
         }
     }
 
@@ -84,17 +98,10 @@ public class Patient_DoctorService {
         List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findDoctorsByPatient(patient);
 
         List<EmployeeRequestDto> doctors = patient_Doctor.stream().map(Patient_Doctor::getDoctor)
-        .map(doctor -> {
-            //TODO: Check that the user is actually a doctor before mapping
-            EmployeeRequestDto dto = new EmployeeRequestDto();
-            dto.setEmployeeId(doctor.getEmployeeId());
-            dto.setName(doctor.getName());
-            dto.setDateOfBirth(doctor.getDateOfBirth());
-            dto.setLastCheckIn(doctor.getLastCheckIn());
-            dto.setEmployeeStatus(doctor.getEmployeeStatus());
-            dto.setEmployeeType(doctor.getEmployeeType());
-            return dto;
-        }).toList();
+                .map(doctor -> {
+                    EmployeeRequestDto dto = employeeService.convertEmployeeToDto(doctor);
+                    return dto;
+                }).toList();
 
         if (doctors.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -104,34 +111,35 @@ public class Patient_DoctorService {
     }
 
     public ResponseEntity<?> getAllInpatientsByDoctorID(UUID doctorId) {
-        User doctor = getDoctorById(doctorId);
-        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findPatientsByDoctor(doctor);
-
+        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findAll();
         List<Patient> patients = patient_Doctor.stream()
-        .map(Patient_Doctor::getPatient)
-        .filter(patient -> patient.getPatientType() == PatientType.INPATIENT)
-        .toList();
+        .map(Patient_Doctor::getPatient).filter(patient -> patient.getPatientType() == PatientType.INPATIENT).toList();
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(patients);
+            return ResponseEntity.ok(
+                patients.stream()
+            .map(patient -> {
+                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                return dto;
+            }).collect(Collectors.toList()));
         }
     }
 
     public ResponseEntity<?> getAllOutpatientsByDoctorID(UUID doctorId) {
-        User doctor = getDoctorById(doctorId);
-        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findPatientsByDoctor(doctor);
-
+        List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findAll();
         List<Patient> patients = patient_Doctor.stream()
-        .map(Patient_Doctor::getPatient)
-        .filter(patient -> patient.getPatientType() == PatientType.OUTPATIENT)
-        .toList();
+        .map(Patient_Doctor::getPatient).filter(patient -> patient.getPatientType() == PatientType.OUTPATIENT).toList();
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(patients);
+            return ResponseEntity.ok(
+                patients.stream()
+            .map(patient -> {
+                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                return dto;
+            }).collect(Collectors.toList()));
         }
     }
 
-    
 }

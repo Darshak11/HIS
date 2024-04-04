@@ -6,7 +6,6 @@ import com.his.his.models.Department;
 import com.his.his.repository.DepartmentRepository;
 
 import jakarta.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,11 +24,11 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
 
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository){
-        this.departmentRepository=departmentRepository;
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
     }
 
-    public List<DepartmentRequestDto> getAllDepartments(){
+    public List<DepartmentRequestDto> getAllDepartments() {
         return departmentRepository.findAll().stream()
                 .map(department -> {
                     DepartmentRequestDto dto = convertToDepartmentRequestDto(department);
@@ -48,46 +47,49 @@ public class DepartmentService {
         return dto;
     }
 
-    public DepartmentRequestDto createDepartment(Department department){
+    public DepartmentRequestDto createDepartment(Department department) {
         Department savedDepartment = departmentRepository.save(department);
         DepartmentRequestDto dto = convertToDepartmentRequestDto(savedDepartment);
         dto.setDepartmentId(department.getDepartmentId());
         return dto;
     }
 
-    public DepartmentRequestDto findById(UUID id){
-        Department department = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
+    public DepartmentRequestDto findById(UUID id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
         return convertToDepartmentRequestDto(department);
     }
 
-    public DepartmentRequestDto updateDepartment(UUID id, Department departmentDetails){
-        Department updatedepartment = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
+    public DepartmentRequestDto updateDepartment(UUID id, Department departmentDetails) {
+        Department updatedepartment = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
 
         updatedepartment.setDepartmentHead(departmentDetails.getDepartmentHead());
         updatedepartment.setDepartmentName(departmentDetails.getDepartmentName());
         updatedepartment.setNoOfNurses(departmentDetails.getNoOfNurses());
         updatedepartment.setNoOfDoctors(departmentDetails.getNoOfDoctors());
-        Department updatedDepartment= departmentRepository.save(updatedepartment);
+        Department updatedDepartment = departmentRepository.save(updatedepartment);
         return convertToDepartmentRequestDto(updatedDepartment);
     }
 
-    public ResponseEntity<HttpStatus> deleteDepartment(UUID id){
-        Department department = departmentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Department does not exist"));
+    public ResponseEntity<HttpStatus> deleteDepartment(UUID id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department does not exist"));
         departmentRepository.delete(department);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     public List<UUID> getDepartmentIdByName(String departmentName) {
         List<UUID> depIds = new ArrayList<>();
-        List<Department> departments = departmentRepository.findByDepartmentName(departmentName);
-        if(!departments.isEmpty()){
-            for(Department department:departments){
-                depIds.add(department.getDepartmentId());
+        List<Department> departments = departmentRepository.findAll();
+        if (!departments.isEmpty()) {
+            for (Department department : departments) {
+                if(department.getDepartmentName().equals(departmentName))
+                    depIds.add(department.getDepartmentId());
             }
             return depIds;
-        }
-        else{
-            throw new ResourceNotFoundException("Departments with name "+departmentName+" not found");
+        } else {
+            throw new ResourceNotFoundException("Departments with name " + departmentName + " not found");
         }
     }
 

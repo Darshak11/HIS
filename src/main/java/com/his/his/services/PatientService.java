@@ -122,11 +122,12 @@ public class PatientService {
 
     public List<UUID> getPatientIdByName(String patientName) {
         List<UUID> patientIds = new ArrayList<>();
-        List<Patient> patients = patientRepository.findByName(patientName);
+        List<Patient> patients = patientRepository.findAll();//.findByName(patientName);
         
         if (!patients.isEmpty()) {
             for (Patient patient : patients) {
-                patientIds.add(patient.getPatientId());
+                if(patient.getName().equals(patientName))
+                    patientIds.add(patient.getPatientId());
             }
             return patientIds;
         } else {
