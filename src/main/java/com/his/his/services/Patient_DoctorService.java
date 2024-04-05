@@ -111,34 +111,37 @@ public class Patient_DoctorService {
     }
 
     public ResponseEntity<?> getAllInpatientsByDoctorID(UUID doctorId) {
+        // TODO: DOCTOR ID CHECK KRNI HAI
         List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findAll();
         List<Patient> patients = patient_Doctor.stream()
-        .map(Patient_Doctor::getPatient).filter(patient -> patient.getPatientType() == PatientType.INPATIENT).toList();
+                .map(Patient_Doctor::getPatient)
+                .filter(patient -> patient.getPatientType() == PatientType.INPATIENT).toList();
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(
-                patients.stream()
-            .map(patient -> {
-                PatientRequestDto dto = patientService.convertPatientToDto(patient);
-                return dto;
-            }).collect(Collectors.toList()));
+                    patients.stream()
+                            .map(patient -> {
+                                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                                return dto;
+                            }).collect(Collectors.toList()));
         }
     }
 
     public ResponseEntity<?> getAllOutpatientsByDoctorID(UUID doctorId) {
         List<Patient_Doctor> patient_Doctor = patientDoctorRepository.findAll();
         List<Patient> patients = patient_Doctor.stream()
-        .map(Patient_Doctor::getPatient).filter(patient -> patient.getPatientType() == PatientType.OUTPATIENT).toList();
+                .map(Patient_Doctor::getPatient).filter(patient -> patient.getPatientType() == PatientType.OUTPATIENT)
+                .toList();
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(
-                patients.stream()
-            .map(patient -> {
-                PatientRequestDto dto = patientService.convertPatientToDto(patient);
-                return dto;
-            }).collect(Collectors.toList()));
+                    patients.stream()
+                            .map(patient -> {
+                                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                                return dto;
+                            }).collect(Collectors.toList()));
         }
     }
 

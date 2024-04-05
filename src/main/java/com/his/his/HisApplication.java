@@ -107,19 +107,19 @@ public class HisApplication implements CommandLineRunner {
 		patient.setPatientType(PatientType.INPATIENT);
 		patient.setAge(15);
 
-		// Patient patient1=new Patient();
-		// patient1.setName("Darshak");
-		// patient1.setAabhaId("1234");
-		// patient1.setAadharId("123456");
-		// patient1.setEmailId("kadn@gmail.com");
-		// patient1.setDateOfBirth("12/06/2002");
-		// patient1.setEmergencyContactNumber("45454545454");
-		// patient1.setGender(Gender.MALE);
-		// patient1.setPatientType(PatientType.OUTPATIENT);
+		Patient patient1=new Patient();
+		patient1.setName("Darshak");
+		patient1.setAabhaId("1234");
+		patient1.setAadharId("123456");
+		patient1.setEmailId("kadn@gmail.com");
+		patient1.setDateOfBirth("12/06/2002");
+		patient1.setEmergencyContactNumber("45454545454");
+		patient1.setGender(Gender.MALE);
+		patient1.setPatientType(PatientType.OUTPATIENT);
 
 		patientRepository.save(patient);
 
-		// patientRepository.save(patient1);
+		patientRepository.save(patient1);
 
 		Department department1 = new Department("Orthopaedics", "Karanjit", 5, 10);
 		Department department2 = new Department("Pediatrics", "Darshak", 1, 12);
@@ -130,8 +130,8 @@ public class HisApplication implements CommandLineRunner {
 		UUID patientId = patient.getPatientId();
 		User doctor = employeeRepository.findById(doctorId)
 				.orElseThrow(() -> new ResourceNotFoundException("Doctor not exist with id " + doctorId));
-		Patient patient1 = patientRepository.findById(patientId)
-				.orElseThrow(() -> new ResourceNotFoundException("Patient not exist with id " + patientId));
+		// Patient patient = patientRepository.findById(patientId)
+		// 		.orElseThrow(() -> new ResourceNotFoundException("Patient not exist with id " + patientId));
 
 		// Check if the relationship already exists
 		Patient_DoctorId id = new Patient_DoctorId(patientId, doctorId);
@@ -142,11 +142,11 @@ public class HisApplication implements CommandLineRunner {
 		// Create a new relationship and save it
 		Patient_Doctor patientDoctor = new Patient_Doctor();
 		patientDoctor.setId(id);
-		patientDoctor.setPatient(patient1);
+		patientDoctor.setPatient(patient);
 		patientDoctor.setDoctor(doctor);
 		patientDoctorRepository.save(patientDoctor);
 
-		Patient_Department patientDepartment = patientDepartmentService.addPatient_Department(patient1.getPatientId(),
+		Patient_Department patientDepartment = patientDepartmentService.addPatient_Department(patient.getPatientId(),
 				department1.getDepartmentId());
 
 		Employee_Department doctorDepartment = employeeDepartmentService.addEmployee_Department(doctor.getEmployeeId(),
@@ -163,9 +163,9 @@ public class HisApplication implements CommandLineRunner {
 		// department1.getDepartmentId().toString());
 		System.out.println("Department ID =" + department1.getDepartmentId().toString());
 		System.out.println("Doctor ID = " + doctor.getEmployeeId().toString() + " and the Patient Id = "
-				+ patient1.getPatientId().toString());
+				+ patient.getPatientId().toString());
 
-		System.out.println("Patient ID = " + patient1.getPatientId().toString() + " and the Department ID = "
+		System.out.println("Patient ID = " + patient.getPatientId().toString() + " and the Department ID = "
 				+ department1.getDepartmentId().toString());
 
 		System.out.println("Doctor ID = " + doctor.getEmployeeId().toString() + " and the Department ID = "

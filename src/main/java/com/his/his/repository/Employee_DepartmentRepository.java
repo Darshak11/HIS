@@ -15,9 +15,4 @@ public interface Employee_DepartmentRepository extends JpaRepository<Employee_De
     List<Employee_Department> findEmployeesByDepartment(Department department);
 
     List<Employee_Department> findDepartmentsByEmployee(User employee);
-    
-    // void deleteEmployee(User employee);
-    // void deleteByEmployeeId(UUID employeeId);
-    // void deleteByEmployee_EmployeeId(UUID employeeId);
-    // void deleteById_EmployeeId(UUID employeeId);
 }

@@ -27,7 +27,7 @@ public class EmployeeService {
     private final UserRepository employeeRepository;
 
     @Autowired
-    public EmployeeService(UserRepository employeeRepository, Employee_DepartmentService employee_DepartmentService) {
+    public EmployeeService(UserRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -109,17 +109,7 @@ public class EmployeeService {
         }
 
         User user = userOptional.get();
-
-        EmployeeRequestDto userDto = new EmployeeRequestDto();
-        userDto.setEmployeeId(user.getEmployeeId());
-        userDto.setName(user.getName());
-        userDto.setDateOfBirth(user.getDateOfBirth());
-        userDto.setLastCheckIn(user.getLastCheckIn());
-        userDto.setEmployeeStatus(user.getEmployeeStatus());
-        userDto.setEmployeeType(user.getEmployeeType());
-        // set other fields
-
-        return userDto;
+        return convertEmployeeToDto(user);
     }
 
     public EmployeeRequestDto updateEmployee(UUID id, User employeeDetails) {
