@@ -2,12 +2,14 @@ package com.his.his.dto;
 
 import com.his.his.models.Patient;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PatientRegisterDto implements Serializable{
     String name ;

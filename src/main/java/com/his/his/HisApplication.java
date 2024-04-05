@@ -63,6 +63,7 @@ public class HisApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		System.out.println("RUNNER ");
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		User employee = new User();
@@ -115,6 +116,7 @@ public class HisApplication implements CommandLineRunner {
 		patient1.setDateOfBirth("12/06/2002");
 		patient1.setEmergencyContactNumber("45454545454");
 		patient1.setGender(Gender.MALE);
+		patient.setAge(19);
 		patient1.setPatientType(PatientType.OUTPATIENT);
 
 		patientRepository.save(patient);
