@@ -47,7 +47,7 @@ public class EmployeeController {
 
     // BUILD GET EMPLOYEE BY ID REST API
     @GetMapping("{id}")
-    @PreAuthorize("hasAuthority('admin:read')")
+    // @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<Object> getEmployeeId(@PathVariable @NonNull UUID id) {
         try {
             EmployeeRequestDto employee = employeeService.getEmployeeById(id);
@@ -59,7 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getAllDoctors")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read')")
     public List<EmployeeRequestDto> getAllDoctors() {
         return employeeService.getAllDoctors();
     }
