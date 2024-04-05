@@ -25,7 +25,7 @@ public class Employee_DepartmentController {
     private Employee_DepartmentService employeeDepartmentService;
 
     @GetMapping("/getAllEmployeesByDepartmentID/{departmentId}")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('headNurse:read')")
     public ResponseEntity<?> getAllEmployeesByDepartmentID(@PathVariable UUID departmentId) {
         try {
             List<EmployeeRequestDto> employees = employeeDepartmentService.getAllEmployeesByDepartmentID(departmentId);

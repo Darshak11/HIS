@@ -47,7 +47,7 @@ public class DatabaseLoader {
         departmentService.createDepartment(new Department("Neurology", "Dr. Jane Doe", 3, 6));
         departmentService.createDepartment(new Department("Oncology", "Dr. James Doe", 4, 8));
         departmentService.createDepartment(new Department("Dermatology", "Dr. Sarah Lee", 2, 4));
-        departmentService.createDepartment(new Department("Orthopedics", "Dr. William Brown", 7, 12));
+        // departmentService.createDepartment(new Department("Orthopedics", "Dr. William Brown", 7, 12));
         departmentService.createDepartment(new Department("Gastroenterology", "Dr. Emily Garcia", 6, 9));
         departmentService.createDepartment(new Department("Pulmonology", "Dr. David Miller", 5, 8));
         departmentService.createDepartment(new Department("Nephrology", "Dr. Olivia Jones", 3, 5));

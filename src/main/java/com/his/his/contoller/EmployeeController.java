@@ -59,7 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getAllDoctors")
-    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read')")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read') or hasAuthority('headNurse:read')")
     public List<EmployeeRequestDto> getAllDoctors() {
         return employeeService.getAllDoctors();
     }
