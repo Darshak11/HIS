@@ -56,7 +56,11 @@ public enum Role {
                   NURSE_UPDATE,
                   PATIENT_READ,
                   PATIENT_UPDATE,
-                  PATIENT_CREATE
+                  PATIENT_CREATE,
+                  HEAD_NURSE_CREATE,
+                  HEAD_NURSE_DELETE,
+                  HEAD_NURSE_READ,
+                  HEAD_NURSE_UPDATE
           )
   ),
   NURSE(

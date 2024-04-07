@@ -53,7 +53,7 @@ public class Employee_DepartmentController {
     }
 
     @GetMapping("/getAllNursesByDepartmentID/{departmentId}")
-    @PreAuthorize("hasAuthority('nurse:read')")
+    @PreAuthorize("hasAuthority('nurse:read') or hasAuthority('headNurse:read')")
     public ResponseEntity<?> getAllNursesByDepartmentID(@PathVariable UUID departmentId) {
         try {
             List<EmployeeRequestDto> nurses = employeeDepartmentService.getAllNursesByDepartmentID(departmentId);
@@ -69,7 +69,7 @@ public class Employee_DepartmentController {
     }
 
     @GetMapping("/getAllDoctorsByDepartmentID/{departmentId}")
-    @PreAuthorize("hasAuthority('doctor:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('headNurse:read') or hasAuthority('nurse:read')")
     public ResponseEntity<?> getAllDoctorsByDepartmentID(@PathVariable UUID departmentId) {
         try {
             List<EmployeeRequestDto> doctors = employeeDepartmentService.getAllDoctorsByDepartmentID(departmentId);
