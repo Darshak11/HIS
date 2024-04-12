@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers(GET,"/employee","/employee").hasAnyAuthority(ADMIN_READ.getPermission(),DESK_READ.getPermission())
+                                .requestMatchers(GET,"/employee","/employee").hasAnyAuthority(ADMIN_READ.getPermission(),DESK_READ.getPermission(),HEAD_NURSE_READ.getPermission())
                                 .requestMatchers("/department","/department/{id}").hasAnyAuthority(DEP_UPDATE.getPermission())
                                 .requestMatchers(GET,"/patient","/patient/{id}","patient/transfer/{id}").hasAnyAuthority(DESK_READ.getPermission(),HEAD_NURSE_READ.getPermission())
                                 .requestMatchers("/patientDoctor").hasAnyAuthority(DESK_READ.getPermission())

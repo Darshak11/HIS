@@ -65,7 +65,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getAllNurses")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('headNurse:read')")
     public List<EmployeeRequestDto> getAllNurses() {
         return employeeService.getAllNurses();
     }
