@@ -8,6 +8,7 @@ import com.his.his.repository.DepartmentRepository;
 
 import java.util.UUID;
 
+import com.his.his.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -60,6 +61,9 @@ public class HisApplication implements CommandLineRunner {
 
 	@Autowired
 	HeadNurse_DepartmentService headNurse_DepartmentService;
+
+	@Autowired
+	EmailService emailService;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -177,7 +181,13 @@ public class HisApplication implements CommandLineRunner {
 				+ department1.getDepartmentId().toString());
 
 		System.out.println("HeadNurse ID = "+employee2.getEmployeeId().toString() + " and the Department ID = "+department1.getDepartmentId().toString());
-		
+
+
+		// System.out.println("Testing email service");
+//		emailService.sendEmail("karanjitsaha12@gmail.com", "Test Email", "This is a test email from Spring Boot");
+		// emailService.sendHtmlEmail("karanjitsaha12@gmail.com","Test Email");
+
+
 	}
 
 }
