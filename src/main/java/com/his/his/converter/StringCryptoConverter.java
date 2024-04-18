@@ -6,17 +6,6 @@ import org.springframework.core.env.Environment;
 import jakarta.persistence.AttributeConverter; 
 import jakarta.persistence.Converter; 
   
-/** 
- * JPA Attribute Converter for encrypting and decrypting String attributes. This 
- * converter uses the Jasypt library for encryption and decryption operations. 
- * It is configured with an environment variable for the encryption password. 
- *  
- * Note: Ensure that the Jasypt library is correctly configured in your project. 
- * The encryption password should be provided through the 
- * "jasypt.encryptor.password" property. 
- *  
- * @author rahul.chauhan 
- */
 @Converter
 public class StringCryptoConverter implements AttributeConverter<String, String> { 
   

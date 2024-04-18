@@ -24,7 +24,12 @@ import org.springframework.http.ResponseEntity;
 @Transactional
 // @RequiredArgsConstructor
 public class PatientService {
+    
+    @Autowired
     private final PatientRepository patientRepository;
+
+    @Autowired
+    private PublicPrivateService publicPrivateService;
 
     @Autowired
     public PatientService(PatientRepository patientRepository){
@@ -46,13 +51,19 @@ public class PatientService {
 
         //Put this in Exception block for handling failure
         patientRepository.save(patient);
-
+        publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
         return new ResponseEntity<>("Patient Registered Successfully",HttpStatus.OK);
+    }
+
+    public void createPatient(Patient patient){
+        patient = patientRepository.save(patient);
+        publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
+        return;
     }
 
     public PatientRequestDto convertPatientToDto(Patient patient){
         PatientRequestDto dto = new PatientRequestDto();
-        dto.setPatientId(patient.getPatientId());
+        dto.setPatientId(publicPrivateService.publicIdByPrivateId(patient.getPatientId()));
         dto.setName(patient.getName());
         dto.setAabhaId(patient.getAabhaId());
         dto.setAadharId(patient.getAadharId());
@@ -120,14 +131,14 @@ public class PatientService {
         return convertPatientToDto(patient);
     }
 
-    public List<UUID> getPatientIdByName(String patientName) {
-        List<UUID> patientIds = new ArrayList<>();
+    public List<String> getPatientIdByName(String patientName) {
+        List<String> patientIds = new ArrayList<>();
         List<Patient> patients = patientRepository.findAll();//.findByName(patientName);
         
         if (!patients.isEmpty()) {
             for (Patient patient : patients) {
                 if(patient.getName().equals(patientName))
-                    patientIds.add(patient.getPatientId());
+                    patientIds.add(publicPrivateService.publicIdByPrivateId(patient.getPatientId()));
             }
             return patientIds;
         } else {

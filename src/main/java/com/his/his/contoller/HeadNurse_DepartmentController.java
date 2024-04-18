@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.his.his.services.DepartmentService;
 import com.his.his.services.EmployeeService;
 import com.his.his.services.HeadNurse_DepartmentService;
+import com.his.his.services.PublicPrivateService;
 
 @RestController
 @CrossOrigin("*")
@@ -29,25 +30,30 @@ public class HeadNurse_DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private PublicPrivateService publicPrivateService;
+
     @GetMapping("/getDepartmentByHeadNurseID/{headNurseId}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<?> getDepartmentByHeadNurseID(@PathVariable UUID headNurseId) {
+    public ResponseEntity<?> getDepartmentByHeadNurseID(@PathVariable String headNurseId) {
         try {
-            return ResponseEntity.ok(departmentService.convertToDepartmentRequestDto(headNurse_DepartmentService.getDepartmentByHeadNurseID(headNurseId)));
+            UUID privateHeadNurseId = publicPrivateService.privateIdByPublicId(headNurseId);
+            return ResponseEntity.ok(departmentService.convertToDepartmentRequestDto(headNurse_DepartmentService.getDepartmentByHeadNurseID(privateHeadNurseId)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("HeadNurse not found with id = "+headNurseId.toString());
+            return ResponseEntity.badRequest().body("HeadNurse not found with id = "+headNurseId);
         }
     }
 
     @GetMapping("/getHeadNurseByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<?> getHeadNurseByDepartmentID(@PathVariable UUID departmentId){
+    public ResponseEntity<?> getHeadNurseByDepartmentID(@PathVariable String departmentId){
         try {
-            return ResponseEntity.ok(employeeService.convertEmployeeToDto(headNurse_DepartmentService.getHeadNurseByDepartmentID(departmentId)));
+            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
+            return ResponseEntity.ok(employeeService.convertEmployeeToDto(headNurse_DepartmentService.getHeadNurseByDepartmentID(privateDepartmentId)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("Department not found with id = "+departmentId.toString());
+            return ResponseEntity.badRequest().body("Department not found with id = "+departmentId);
         }
     }
 }

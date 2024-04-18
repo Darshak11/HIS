@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientRequestDto implements Serializable {
-    private UUID patientId;
+    private String patientId;
     private String name;
     private String aabhaId;
     private String aadharId;

@@ -8,7 +8,10 @@ import com.his.his.repository.DepartmentRepository;
 
 import java.util.UUID;
 
+import com.his.his.services.DepartmentService;
 import com.his.his.services.EmailService;
+import com.his.his.services.EmployeeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -29,7 +32,9 @@ import com.his.his.repository.Patient_DoctorRepository;
 import com.his.his.repository.UserRepository;
 import com.his.his.services.Employee_DepartmentService;
 import com.his.his.services.HeadNurse_DepartmentService;
+import com.his.his.services.PatientService;
 import com.his.his.services.Patient_DepartmentService;
+import com.his.his.services.PublicPrivateService;
 
 @SpringBootApplication
 public class HisApplication implements CommandLineRunner {
@@ -41,14 +46,17 @@ public class HisApplication implements CommandLineRunner {
 	@Autowired
 	private UserRepository employeeRepository;
 
-	@Autowired
-	private PatientRepository patientRepository;
-
 	// @Autowired
-	// private ConsultationRepository consultationRepository;
+	// private PatientRepository patientRepository;
 
 	@Autowired
-	private DepartmentRepository departmentRepository;
+	private EmployeeService employeeService;
+
+	@Autowired
+	private PatientService patientService;
+
+	@Autowired 
+	private DepartmentService departmentService;
 
 	@Autowired
 	private Patient_DoctorRepository patientDoctorRepository;
@@ -61,6 +69,9 @@ public class HisApplication implements CommandLineRunner {
 
 	@Autowired
 	HeadNurse_DepartmentService headNurse_DepartmentService;
+
+	@Autowired
+	PublicPrivateService publicPrivateIdService;
 
 	@Autowired
 	EmailService emailService;
@@ -97,9 +108,9 @@ public class HisApplication implements CommandLineRunner {
 		employee2.setPassword(encoder.encode("1234"));
 		employee2.setEmployeeType(EmployeeType.HEAD_NURSE);
 
-		employeeRepository.save(employee);
-		employeeRepository.save(employee1);
-		employeeRepository.save(employee2);
+		employeeService.createEmployee(employee);
+		employeeService.createEmployee(employee1);
+		employeeService.createEmployee(employee2);
 
 		Patient patient = new Patient();
 		patient.setName("Karan");
@@ -109,7 +120,7 @@ public class HisApplication implements CommandLineRunner {
 		patient.setDateOfBirth("12/06/2002");
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
-		patient.setPatientType(PatientType.INPATIENT);
+		patient.setPatientType(PatientType.OUTPATIENT);
 		patient.setAge(15);
 
 		Patient patient1=new Patient();
@@ -123,14 +134,14 @@ public class HisApplication implements CommandLineRunner {
 		patient.setAge(19);
 		patient1.setPatientType(PatientType.OUTPATIENT);
 
-		patientRepository.save(patient);
-
-		patientRepository.save(patient1);
+		patientService.createPatient(patient);
+		patientService.createPatient(patient1);
 
 		Department department1 = new Department("Orthopaedics", "Karanjit", 5, 10);
 		Department department2 = new Department("Pediatrics", "Darshak", 1, 12);
-		departmentRepository.save(department1);
-		departmentRepository.save(department2);
+		departmentService.createDepartment(department1);
+		departmentService.createDepartment(department2);
+
 
 		UUID doctorId = employee.getEmployeeId();
 		UUID patientId = patient.getPatientId();
@@ -164,23 +175,22 @@ public class HisApplication implements CommandLineRunner {
 		HeadNurse_Department headNurse_Department = headNurse_DepartmentService
 				.addHeadNurse_Department(employee2.getEmployeeId(), department1.getDepartmentId());
 
-		System.out.println("Patient ID = " + patient.getPatientId().toString());
+		System.out.println("Patient ID = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString());
 		// System.out.println("Department ID = "+
 		// department1.getDepartmentId().toString());
-		System.out.println("Department ID =" + department1.getDepartmentId().toString());
-		System.out.println("Doctor ID = " + doctor.getEmployeeId().toString() + " and the Patient Id = "
-				+ patient.getPatientId().toString());
+		System.out.println("Department ID =" + publicPrivateIdService.publicIdByPrivateId (department1.getDepartmentId()).toString());
+		System.out.println("Doctor ID = " + publicPrivateIdService.publicIdByPrivateId(doctor.getEmployeeId()).toString() + " and the Patient Id = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString());
 
-		System.out.println("Patient ID = " + patient.getPatientId().toString() + " and the Department ID = "
-				+ department1.getDepartmentId().toString());
+		System.out.println("Patient ID = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString() + " and the Department ID = "
+				+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
 
-		System.out.println("Doctor ID = " + doctor.getEmployeeId().toString() + " and the Department ID = "
-				+ department1.getDepartmentId().toString());
+		System.out.println("Doctor ID = " + publicPrivateIdService.publicIdByPrivateId(doctor.getEmployeeId()).toString() + " and the Department ID = "
+				+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
 
-		System.out.println("Nurse ID = " + employee1.getEmployeeId().toString() + " and the Department ID = "
-				+ department1.getDepartmentId().toString());
+		System.out.println("Nurse ID = " + publicPrivateIdService.publicIdByPrivateId(employee1.getEmployeeId()).toString() + " and the Department ID = "
+				+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
 
-		System.out.println("HeadNurse ID = "+employee2.getEmployeeId().toString() + " and the Department ID = "+department1.getDepartmentId().toString());
+		System.out.println("HeadNurse ID = "+publicPrivateIdService.publicIdByPrivateId(employee2.getEmployeeId()).toString() + " and the Department ID = "+publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
 
 
 		// System.out.println("Testing email service");

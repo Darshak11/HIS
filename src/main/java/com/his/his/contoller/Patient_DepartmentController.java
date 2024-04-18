@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.his.his.dto.DepartmentRequestDto;
 import com.his.his.models.Patient;
 import com.his.his.services.Patient_DepartmentService;
+import com.his.his.services.PublicPrivateService;
 
 @RestController
 @CrossOrigin("*")
@@ -24,25 +25,30 @@ public class Patient_DepartmentController {
     @Autowired
     private Patient_DepartmentService patientDepartmentService;
 
+    @Autowired
+    private PublicPrivateService publicPrivateService;
+
     @GetMapping("/getAllPatientsByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('patient:read')")
-    public ResponseEntity<?> getAllPatientsByDepartmentID(@PathVariable UUID departmentId) {
+    public ResponseEntity<?> getAllPatientsByDepartmentID(@PathVariable String departmentId) {
         try {
-            return patientDepartmentService.getAllPatientsByDepartmentID(departmentId);
+            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
+            return patientDepartmentService.getAllPatientsByDepartmentID(privateDepartmentId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Department not found with id = "+departmentId.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Department not found with id = "+departmentId, HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/getAllDepartmentsByPatientID/{patientId}")
     @PreAuthorize("hasAuthority('desk:read')")
-    public ResponseEntity<?> getAllDepartmentsByPatientID(@PathVariable UUID patientId) {
+    public ResponseEntity<?> getAllDepartmentsByPatientID(@PathVariable String patientId) {
         try {
-            return patientDepartmentService.getAllDepartmentsByPatientID(patientId);
+            UUID privatePatientId = publicPrivateService.privateIdByPublicId(patientId);
+            return patientDepartmentService.getAllDepartmentsByPatientID(privatePatientId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Patient not found with id = "+patientId.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not found with id = "+patientId, HttpStatus.NOT_FOUND);
         }
     }
 }

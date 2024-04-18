@@ -42,6 +42,9 @@ public class Employee_DepartmentService {
 	private DepartmentService departmentService;
 
 	@Autowired
+    private PublicPrivateService publicPrivateService;
+
+	@Autowired
 	public Employee_DepartmentService(Employee_DepartmentRepository employeeDepartmentRepository,
 			DepartmentRepository departmentRepository, UserRepository employeeRepository) {
 		this.employeeDepartmentRepository = employeeDepartmentRepository;

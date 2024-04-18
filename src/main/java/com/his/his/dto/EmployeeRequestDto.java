@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class EmployeeRequestDto implements Serializable
 {
-    UUID employeeId;
+    String employeeId;
     String name;
     String dateOfBirth;
     String lastCheckIn;

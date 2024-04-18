@@ -4,6 +4,7 @@ import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.models.User;
 import com.his.his.services.EmployeeService;
+import com.his.his.services.PublicPrivateService;
 
 import lombok.NonNull;
 
@@ -23,9 +24,8 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
+    @Autowired
+    private PublicPrivateService publicPrivateIdService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody EmployeeRegisterDto registerDto) {
@@ -48,13 +48,14 @@ public class EmployeeController {
     // BUILD GET EMPLOYEE BY ID REST API
     @GetMapping("{id}")
     // @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<Object> getEmployeeId(@PathVariable @NonNull UUID id) {
+    public ResponseEntity<Object> getEmployeeId(@PathVariable @NonNull String id) {
         try {
-            EmployeeRequestDto employee = employeeService.getEmployeeById(id);
+            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            EmployeeRequestDto employee = employeeService.getEmployeeById(privateEmployeeId);
             return ResponseEntity.ok(employee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Employee not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Employee not found with id = " + id, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -81,9 +82,10 @@ public class EmployeeController {
     @PreAuthorize("hasAuthority('admin:update')")
     // post mapping vs put mapping. post used to create a resource and put used to
     // update a resource
-    public ResponseEntity<Object> updateEmployee(@PathVariable UUID id, @RequestBody User employeeDetails) {
+    public ResponseEntity<Object> updateEmployee(@PathVariable String id, @RequestBody User employeeDetails) {
         try {
-            EmployeeRequestDto updatedEmployee = employeeService.updateEmployee(id, employeeDetails);
+            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            EmployeeRequestDto updatedEmployee = employeeService.updateEmployee(privateEmployeeId, employeeDetails);
             return ResponseEntity.ok(updatedEmployee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -94,9 +96,10 @@ public class EmployeeController {
     // BUILD DELETE EMPLOYEE REST API
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public ResponseEntity<?> deleteEmployee(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteEmployee(@PathVariable String id) {
         try {
-            return employeeService.deleteEmployee(id);
+            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            return employeeService.deleteEmployee(privateEmployeeId);
         } catch (Exception e) {
             System.out.println(e.toString());
             return new ResponseEntity<>("Failed to delete employee with id = " + id.toString(), HttpStatus.NOT_FOUND);

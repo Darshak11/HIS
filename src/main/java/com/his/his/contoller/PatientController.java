@@ -5,6 +5,7 @@ import com.his.his.dto.PatientRequestDto;
 import com.his.his.models.Patient;
 import com.his.his.repository.PatientRepository;
 import com.his.his.services.PatientService;
+import com.his.his.services.PublicPrivateService;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,12 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private PublicPrivateService publicPrivateService;
+
     public PatientController(PatientService patientService){
         this.patientService = patientService;
     }
@@ -32,9 +39,7 @@ public class PatientController {
             return patientService.signup(registerDto);
         }
 
-    @Autowired
-    private PatientRepository patientRepository;
-
+    
     @GetMapping
     @PreAuthorize("hasAuthority('desk:read')")
     public List<PatientRequestDto> getAllPatients(){
@@ -63,14 +68,15 @@ public class PatientController {
     //BUILD GET Patient BY ID REST API
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('desk:read')")
-    public ResponseEntity<?> getPatientId(@PathVariable UUID id){
+    public ResponseEntity<?> getPatientId(@PathVariable String id){
         try {
-            PatientRequestDto patient = patientService.getPatientId(id);
+            UUID privatePatientId=publicPrivateService.privateIdByPublicId(id);
+            PatientRequestDto patient = patientService.getPatientId(privatePatientId);
             // logger.debug("Patient found");
             return ResponseEntity.ok(patient);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not found with id = "+id, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -78,14 +84,15 @@ public class PatientController {
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('desk:update')")
     //post mapping vs put mapping. post used to create a resource and put used to update a resource 
-    public ResponseEntity<?> updatePatient(@PathVariable UUID id,@RequestBody Patient patientDetails){
+    public ResponseEntity<?> updatePatient(@PathVariable String id,@RequestBody Patient patientDetails){
         try {
-            PatientRequestDto updatedPatient = patientService.updatePatient(id, patientDetails);
+            UUID privatePatientId = publicPrivateService.privateIdByPublicId(id);
+            PatientRequestDto updatedPatient = patientService.updatePatient(privatePatientId, patientDetails);
             // logger.debug("Successfully updated the Patient");
             return ResponseEntity.ok(updatedPatient);    
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not found with id = "+id, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -103,14 +110,15 @@ public class PatientController {
 
     @GetMapping("/transfer/{id}")
     @PreAuthorize("hasAuthority('desk:update')")
-    public ResponseEntity<?> transferPatient(@PathVariable UUID id,@RequestParam Patient.PatientType newPatientType){
+    public ResponseEntity<?> transferPatient(@PathVariable String id,@RequestParam Patient.PatientType newPatientType){
         try {
-            PatientRequestDto patient = patientService.transferPatient(id, newPatientType);
+            UUID privatePatientId = publicPrivateService.privateIdByPublicId(id);
+            PatientRequestDto patient = patientService.transferPatient(privatePatientId, newPatientType);
             // logger.debug("Patient found");
             return ResponseEntity.ok(patient);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Patient not found with id = "+id.toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Patient not found with id = "+id, HttpStatus.NOT_FOUND);
         }
     }
 

@@ -24,6 +24,9 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
 
     @Autowired
+    private PublicPrivateService publicPrivateService;
+
+    @Autowired
     public DepartmentService(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
     }
@@ -39,7 +42,8 @@ public class DepartmentService {
 
     public DepartmentRequestDto convertToDepartmentRequestDto(Department department) {
         DepartmentRequestDto dto = new DepartmentRequestDto();
-        dto.setDepartmentId(department.getDepartmentId());
+        UUID privateId = department.getDepartmentId();
+        dto.setDepartmentId(publicPrivateService.publicIdByPrivateId(privateId));
         dto.setDepartmentHead(department.getDepartmentHead());
         dto.setDepartmentName(department.getDepartmentName());
         dto.setNoOfDoctors(department.getNoOfDoctors());
@@ -49,8 +53,8 @@ public class DepartmentService {
 
     public DepartmentRequestDto createDepartment(Department department) {
         Department savedDepartment = departmentRepository.save(department);
+        publicPrivateService.savePublicPrivateId(savedDepartment.getDepartmentId(), "DEPARTMENT");
         DepartmentRequestDto dto = convertToDepartmentRequestDto(savedDepartment);
-        dto.setDepartmentId(department.getDepartmentId());
         return dto;
     }
 

@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults (level = AccessLevel.PRIVATE)
 public class DepartmentRequestDto {
-    UUID departmentId;
+    String departmentId;
     String departmentName;
     String departmentHead;
     int noOfDoctors;

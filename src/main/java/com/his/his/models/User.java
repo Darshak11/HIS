@@ -2,24 +2,31 @@ package com.his.his.models;
 
 import java.util.Collection;
 import java.util.List;
-
-import jakarta.persistence.*;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.his.his.converter.AesEncryptor;
-import com.his.his.converter.ObjectCryptoConverter;
-import com.his.his.converter.StringCryptoConverter;
-import com.his.his.token.Token;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.his.his.converter.StringCryptoConverter;
+import com.his.his.token.Token;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -27,13 +34,12 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements UserDetails
-{
+public class User implements UserDetails {
     public enum EmployeeStatus {
         CHECKED_IN, CHECKED_OUT
     }
 
-    public enum EmployeeType{
+    public enum EmployeeType {
         NURSE,
         DOCTOR,
         HEAD_NURSE,
@@ -45,21 +51,21 @@ public class User implements UserDetails
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "employeeId", updatable = false, nullable = false )
-    private UUID employeeId; 
-    
-    @Convert(converter = StringCryptoConverter.class) 
+    @Column(name = "employeeId", updatable = false, nullable = false)
+    private UUID employeeId;
+
+    @Convert(converter = StringCryptoConverter.class)
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @Column(name = "DateOfBirth", nullable = false )
+    @Column(name = "DateOfBirth", nullable = false)
     private String dateOfBirth;
 
-    @Column(name="Password", nullable = false)
+    @Column(name = "Password", nullable = false)
     private String password;
 
     @Convert(converter = StringCryptoConverter.class)
-    @Column(name = "LastCheckIn" )
+    @Column(name = "LastCheckIn")
     private String lastCheckIn;
 
     @Column(name = "status")
@@ -72,7 +78,16 @@ public class User implements UserDetails
     @Enumerated(EnumType.STRING)
     private EmployeeType employeeType;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Employee_Department employeeDepartment;
+
+    @OneToOne(mappedBy = "headNurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private HeadNurse_Department headNurseDepartment;
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
+    private List<Patient_Doctor> patientDoctors;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Token> tokens;
 
@@ -89,7 +104,6 @@ public class User implements UserDetails
         return true;
     }
 
-
     @Override
     public boolean isCredentialsNonExpired() {
         // Add your implementation here
@@ -101,6 +115,7 @@ public class User implements UserDetails
         // Add your implementation here
         return role.getAuthorities();
     }
+
     @Override
     public boolean isAccountNonExpired() {
         // Add your implementation here

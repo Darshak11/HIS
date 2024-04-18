@@ -27,6 +27,9 @@ public class EmployeeService {
     private final UserRepository employeeRepository;
 
     @Autowired
+    private PublicPrivateService publicPrivateService;
+
+    @Autowired
     public EmployeeService(UserRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
@@ -45,9 +48,15 @@ public class EmployeeService {
         return new ResponseEntity<>("Patient Registered Successfully", HttpStatus.OK);
     }
 
+    public void createEmployee(User employee) {
+        employee = employeeRepository.save(employee);
+        publicPrivateService.savePublicPrivateId(employee.getEmployeeId(), employee.getEmployeeType().toString());
+        return;
+    }
+
     public EmployeeRequestDto convertEmployeeToDto(User employee) {
         EmployeeRequestDto dto = new EmployeeRequestDto();
-        dto.setEmployeeId(employee.getEmployeeId());
+        dto.setEmployeeId(publicPrivateService.publicIdByPrivateId(employee.getEmployeeId()));
         dto.setName(employee.getName());
         dto.setDateOfBirth(employee.getDateOfBirth());
         dto.setLastCheckIn(employee.getLastCheckIn());
