@@ -84,7 +84,7 @@ public class PatientController {
     @PutMapping("{id}")
     @PreAuthorize("hasAuthority('desk:update')")
     //post mapping vs put mapping. post used to create a resource and put used to update a resource 
-    public ResponseEntity<?> updatePatient(@PathVariable String id,@RequestBody Patient patientDetails){
+    public ResponseEntity<?> updatePatient(@PathVariable String id,@RequestBody PatientRegisterDto patientDetails){
         try {
             UUID privatePatientId = publicPrivateService.privateIdByPublicId(id);
             PatientRequestDto updatedPatient = patientService.updatePatient(privatePatientId, patientDetails);

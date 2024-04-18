@@ -109,7 +109,7 @@ public class PatientService {
         return convertPatientToDto(patientOptional.get());
     }
 
-    public PatientRequestDto updatePatient(UUID id,Patient patientDetails){
+    public PatientRequestDto updatePatient(UUID id,PatientRegisterDto patientDetails){
         Patient updatePatient = patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient does not exist with id "+id));
         updatePatient.setName(patientDetails.getName());
         updatePatient.setAabhaId(patientDetails.getAabhaId());

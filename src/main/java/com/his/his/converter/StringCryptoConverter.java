@@ -39,7 +39,7 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
             return this.encryptor.encrypt(attribute); 
         } catch (Exception e) {
             System.out.println(e);
-            return e.getMessage();
+            return null;
         }
     } 
   
@@ -56,7 +56,7 @@ public class StringCryptoConverter implements AttributeConverter<String, String>
             return this.encryptor.decrypt(dbData);   
         } catch (Exception e) {
             System.out.println(e);
-            return e.getMessage();
+            return null;
         } 
     } 
 } 
