@@ -121,7 +121,6 @@ public class HisApplication implements CommandLineRunner {
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
 		patient.setPatientType(PatientType.OUTPATIENT);
-		patient.setAge(15);
 
 		Patient patient1=new Patient();
 		patient1.setName("Darshak");
@@ -131,7 +130,6 @@ public class HisApplication implements CommandLineRunner {
 		patient1.setDateOfBirth("12/06/2002");
 		patient1.setEmergencyContactNumber("45454545454");
 		patient1.setGender(Gender.MALE);
-		patient.setAge(19);
 		patient1.setPatientType(PatientType.OUTPATIENT);
 
 		patientService.createPatient(patient);

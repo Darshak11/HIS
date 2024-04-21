@@ -47,7 +47,6 @@ public class PatientService {
         patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
         patient.setPatientType(patientRegisterDto.getPatientType());
-        patient.setAge(patientRegisterDto.getAge());
 
         //Put this in Exception block for handling failure
         patientRepository.save(patient);
@@ -73,7 +72,6 @@ public class PatientService {
         dto.setGender(patient.getGender());
         dto.setPatientType(patient.getPatientType());
         dto.setDischargeStatus(patient.getDischargeStatus());
-        dto.setAge(patient.getAge());
         return dto;
     }
 
@@ -119,7 +117,6 @@ public class PatientService {
         updatePatient.setEmergencyContactNumber(patientDetails.getEmergencyContactNumber());
         updatePatient.setGender(patientDetails.getGender());
         updatePatient.setPatientType(patientDetails.getPatientType());
-        updatePatient.setAge(patientDetails.getAge());
         Patient updatedPatient = patientRepository.save(updatePatient);
         return getPatientId(id);
     }

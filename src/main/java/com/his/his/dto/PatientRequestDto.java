@@ -28,5 +28,4 @@ public class PatientRequestDto implements Serializable {
     private Gender gender;
     private PatientType patientType;
     private DischargeStatus dischargeStatus;
-    private int age;
 }

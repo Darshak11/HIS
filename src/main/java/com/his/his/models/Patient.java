@@ -81,10 +81,6 @@ public class Patient
     @Column(name = "DischargeStatus")
     @Enumerated(EnumType.STRING)
     private DischargeStatus dischargeStatus;
-
-    // @Convert(converter = StringCryptoConverter.class)
-    @Column(name="age",nullable =false)
-    private int age;
     
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE)
     private List<Patient_Department> patientDepartments;

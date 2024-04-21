@@ -20,7 +20,6 @@ public class PatientRegisterDto implements Serializable{
     String emergencyContactNumber;
     Patient.Gender gender;
     Patient.PatientType patientType;
-    int age;
 }
 
 
