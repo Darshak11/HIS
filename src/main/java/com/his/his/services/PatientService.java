@@ -6,6 +6,8 @@ import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.Patient;
 import com.his.his.models.Patient.PatientType;
 import com.his.his.repository.PatientRepository;
+
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ public class PatientService {
     @Autowired
     private PublicPrivateService publicPrivateService;
 
+    @Autowired 
+    private EmailService emailService;
+
     @Autowired
     public PatientService(PatientRepository patientRepository){
         this.patientRepository = patientRepository;
@@ -47,7 +52,12 @@ public class PatientService {
         patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
         patient.setPatientType(patientRegisterDto.getPatientType());
-
+        try {
+            emailService.sendHtmlEmail(patient.getEmailId(), "You have been successfully registered into our system","TermsAndConditions.html");
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         //Put this in Exception block for handling failure
         patientRepository.save(patient);
         publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
@@ -55,6 +65,12 @@ public class PatientService {
     }
 
     public void createPatient(Patient patient){
+        // try {
+        //     emailService.sendHtmlEmail(patient.getEmailId(), "You have been successfully registered into our system","TermsAndConditions.html");
+        // } catch (MessagingException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
         patient = patientRepository.save(patient);
         publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
         return;

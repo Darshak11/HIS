@@ -8,6 +8,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+
 @Service
 public class EmailService {
 
@@ -22,19 +26,38 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendHtmlEmail(String to, String subject) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
+    // public void sendHtmlEmail(String to, String subject) throws MessagingException {
+    //     MimeMessage message = mailSender.createMimeMessage();
 
+    //     message.setFrom(new InternetAddress("hadproject75@gmail.com"));
+    //     message.setRecipients(MimeMessage.RecipientType.TO, to);
+    //     message.setSubject(subject);
+
+    //     String htmlContent = "<h1>This is a test Spring Boot email</h1>" +
+    //             "<p>It can contain <strong>HTML</strong> content.</p>";
+    //     message.setContent(htmlContent, "text/html; charset=utf-8");
+
+    //     mailSender.send(message);
+    // }
+
+    public void sendHtmlEmail(String to, String subject, String htmlFileName) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+    
         message.setFrom(new InternetAddress("hadproject75@gmail.com"));
         message.setRecipients(MimeMessage.RecipientType.TO, to);
+        System.out.println("Sending email to: " + to);
         message.setSubject(subject);
-
-        String htmlContent = "<h1>This is a test Spring Boot email</h1>" +
-                "<p>It can contain <strong>HTML</strong> content.</p>";
+    
+        String htmlContent = "";
+        try {
+            htmlContent = new String(Files.readAllBytes(Paths.get("src/main/java/com/his/his/services/Email HTML pages/" + htmlFileName)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
         message.setContent(htmlContent, "text/html; charset=utf-8");
-
+    
         mailSender.send(message);
     }
-
 
 }
