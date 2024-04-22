@@ -1,6 +1,7 @@
 package com.his.his.contoller;
 
 import com.his.his.dto.DepartmentRequestDto;
+import com.his.his.logging.LogService;
 import com.his.his.models.Department;
 import com.his.his.services.DepartmentService;
 import com.his.his.services.PublicPrivateService;
@@ -26,6 +27,9 @@ public class DepartmentController {
     @Autowired
     private PublicPrivateService publicPrivateService;
 
+    @Autowired
+    private LogService loggingService;
+
     @GetMapping
     @PreAuthorize("hasAuthority('department:read')")
     public List<DepartmentRequestDto> getAllDepartment() {
@@ -35,7 +39,9 @@ public class DepartmentController {
     @PostMapping
     @PreAuthorize("hasAuthority('department:update')")
     public DepartmentRequestDto createDepartment(@RequestBody Department department) {
-        return departmentService.createDepartment(department);
+        DepartmentRequestDto department1 = departmentService.createDepartment(department);
+        loggingService.addLog("INFO", "Department created", null, department.getDepartmentId());
+        return department1;
     }
 
     @GetMapping("{publicId}")
