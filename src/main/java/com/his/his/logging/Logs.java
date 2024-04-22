@@ -44,17 +44,17 @@ public class Logs {
     private Exception throwable;
 
     @Column(name = "actor_id")
-    private UUID actorId;
+    private String actorId;
 
     @Column(name = "user_id")
-    private UUID userId;
+    private String userId;
 
     @PrePersist
     protected void onCreate() {
         eventDate = new Timestamp(System.currentTimeMillis());
     }
 
-    public Logs(String level, String msg, Exception throwable, UUID actorId, UUID userId) {
+    public Logs(String level, String msg, Exception throwable, String actorId, String userId) {
         this.level = level;
         this.msg = msg;
         this.throwable = throwable;

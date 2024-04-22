@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LogRepository extends JpaRepository<Logs, Long>{
 
-    List<Logs> findByActorId(UUID actorId);
+    List<Logs> findByActorId(String actorId);
 
-    List<Logs> findByUserId(UUID userId);
+    List<Logs> findByUserId(String userId);
     
 }

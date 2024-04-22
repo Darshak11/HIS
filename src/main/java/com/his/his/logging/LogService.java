@@ -30,22 +30,23 @@ public class LogService {
         dto.setLevel(logs.getLevel());
         dto.setMsg(logs.getMsg());
         dto.setThrowable(logs.getThrowable());
-        dto.setActorId(publicPrivateService.publicIdByPrivateId(logs.getActorId()));
-        dto.setUserId(publicPrivateService.publicIdByPrivateId(logs.getUserId()));
+        dto.setActorId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getActorId())));
+        dto.setUserId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getUserId())));
         return dto;
     }
 
     public void addLog(String level, String msg, Exception throwable, UUID userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID actorId = UUID.fromString(authentication.getName());
-        logRepository.save(new Logs(level, msg, throwable, actorId, userId));
+        String actorId =authentication.getName();
+        String userIdString = (userId != null) ? userId.toString() : "null";
+        logRepository.save(new Logs(level, msg, throwable, actorId, userIdString));
     }
 
     // TODO: HOW TO DEAL WITH THROWABLE? DO WE EVEN NEED IT?
 
     public List<LogRequestDto> getLogsByActorId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID actorId = UUID.fromString(authentication.getName());
+        String actorId = authentication.getName();
         return logRepository.findByActorId(actorId)
                 .stream()
                 .map(Logs -> {
@@ -57,7 +58,7 @@ public class LogService {
 
     public List<LogRequestDto> getLogsByUserId(String user) {
         System.out.println(user);
-        UUID userId = publicPrivateService.privateIdByPublicId(user);
+        String userId = publicPrivateService.privateIdByPublicId(user).toString();
         return logRepository.findByUserId(userId)
                 .stream()
                 .map(Logs -> {
