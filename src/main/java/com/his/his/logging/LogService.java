@@ -29,17 +29,17 @@ public class LogService {
         dto.setEventDate(logs.getEventDate());;
         dto.setLevel(logs.getLevel());
         dto.setMsg(logs.getMsg());
-        dto.setThrowable(logs.getThrowable());
+        // dto.setThrowable(logs.getThrowable());
         dto.setActorId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getActorId())));
         dto.setUserId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getUserId())));
         return dto;
     }
 
-    public void addLog(String level, String msg, Exception throwable, UUID userId) {
+    public void addLog(String level, String msg, UUID userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String actorId =authentication.getName();
         String userIdString = (userId != null) ? userId.toString() : "null";
-        logRepository.save(new Logs(level, msg, throwable, actorId, userIdString));
+        logRepository.save(new Logs(level, msg, actorId, userIdString));
     }
 
     // TODO: HOW TO DEAL WITH THROWABLE? DO WE EVEN NEED IT?

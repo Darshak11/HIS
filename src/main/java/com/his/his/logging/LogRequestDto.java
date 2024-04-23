@@ -13,7 +13,7 @@ public class LogRequestDto {
     private Timestamp eventDate;
     private String level;
     private String msg;
-    private Exception throwable;
+    private String throwable;
     private String actorId;
     private String userId;
 }

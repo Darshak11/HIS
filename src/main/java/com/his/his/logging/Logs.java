@@ -40,8 +40,8 @@ public class Logs {
     @Column(name = "msg")
     private String msg;
 
-    @Column(name = "throwable")
-    private Exception throwable;
+    // @Column(name = "throwable")
+    // private String throwable;
 
     @Column(name = "actor_id")
     private String actorId;
@@ -54,10 +54,10 @@ public class Logs {
         eventDate = new Timestamp(System.currentTimeMillis());
     }
 
-    public Logs(String level, String msg, Exception throwable, String actorId, String userId) {
+    public Logs(String level, String msg, String actorId, String userId) {
         this.level = level;
         this.msg = msg;
-        this.throwable = throwable;
+        // this.throwable = throwable;
         this.actorId = actorId;
         this.userId = userId;
     }

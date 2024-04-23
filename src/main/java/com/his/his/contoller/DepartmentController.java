@@ -33,6 +33,7 @@ public class DepartmentController {
     @GetMapping
     @PreAuthorize("hasAuthority('department:read')")
     public List<DepartmentRequestDto> getAllDepartment() {
+        loggingService.addLog("INFO", "Get all departments", null);
         return departmentService.getAllDepartments();
     }
 
@@ -40,19 +41,27 @@ public class DepartmentController {
     @PreAuthorize("hasAuthority('department:update')")
     public DepartmentRequestDto createDepartment(@RequestBody Department department) {
         DepartmentRequestDto department1 = departmentService.createDepartment(department);
-        loggingService.addLog("INFO", "Department created", null, department.getDepartmentId());
+        loggingService.addLog("INFO", "Department created", department.getDepartmentId());
         return department1;
     }
 
     @GetMapping("{publicId}")
     @PreAuthorize("hasAuthority('department:read')")
     public ResponseEntity<?> getDepartmentId(@PathVariable String publicId) {
+        UUID privateId = null;
         try {
-            UUID privateId = publicPrivateService.privateIdByPublicId(publicId);
+            privateId = publicPrivateService.privateIdByPublicId(publicId);
             DepartmentRequestDto dto = departmentService.findById(privateId);
+            loggingService.addLog("INFO", "Get department by id", privateId);
             return ResponseEntity.ok(dto);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.err.println(e);
+            if (privateId != null) {
+                loggingService.addLog("ERROR", e.toString(), privateId);
+            } else {
+                loggingService.addLog("ERROR", e.toString(), privateId);
+            }
             return new ResponseEntity<>("Department not found with id = " + publicId, HttpStatus.NOT_FOUND);
         }
     }
@@ -60,12 +69,19 @@ public class DepartmentController {
     @PutMapping("{publicId}")
     @PreAuthorize("hasAuthority('department:update')")
     public ResponseEntity<?> updateDepartment(@PathVariable String publicId, @RequestBody Department departmentDetails) {
+        UUID privateId =null;
         try {
-            UUID privateId = publicPrivateService.privateIdByPublicId(publicId);
+            privateId = publicPrivateService.privateIdByPublicId(publicId);
             DepartmentRequestDto updatedDto = departmentService.updateDepartment(privateId, departmentDetails);
+            loggingService.addLog("INFO", "Update department", privateId);
             return ResponseEntity.ok(updatedDto);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            if (privateId != null) {
+                loggingService.addLog("ERROR", e.toString(), privateId);
+            } else {
+                loggingService.addLog("ERROR", e.toString(), privateId);
+            }
             return new ResponseEntity<>("Department not found with id = " + publicId.toString(), HttpStatus.NOT_FOUND);
         }
 
@@ -74,12 +90,21 @@ public class DepartmentController {
     @DeleteMapping("{publicId}")
     @PreAuthorize("hasAuthority('department:delete')")
     public ResponseEntity<?> deleteDepartment(@PathVariable String publicId) {
+        UUID privateId =null;
         try {
-            UUID privateId = publicPrivateService.privateIdByPublicId(publicId);
-            return departmentService.deleteDepartment(privateId);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>("Department not found with id = " + publicId.toString(), HttpStatus.NOT_FOUND);
+            privateId = publicPrivateService.privateIdByPublicId(publicId);
+            ResponseEntity<HttpStatus> httpStatus = departmentService.deleteDepartment(privateId);
+            loggingService.addLog("INFO", "Delete Department", privateId);
+            return httpStatus;
+        } catch (Throwable e) {
+            System.out.println("EROOR: ___" + e.getMessage());
+            if (privateId != null) {
+                System.err.println(e.getMessage());
+                loggingService.addLog("ERROR", e.getMessage().substring(0, Math.min(e.getMessage().length(), 200)), privateId);
+            } else {
+                loggingService.addLog("ERROR", e.getMessage(), privateId);
+            }
+            return new ResponseEntity<>("Department cannot be deleted with id = " + publicId.toString(), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -92,9 +117,11 @@ public class DepartmentController {
             List<String> publicIds = privateIds.stream()
                     .map(privateId -> publicPrivateService.publicIdByPrivateId(privateId))
                     .collect(Collectors.toList());
+                    loggingService.addLog("INFO", "Get department id by Name", null);
             return ResponseEntity.ok(publicIds);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            loggingService.addLog("ERROR", e.getMessage(), null);
             return new ResponseEntity<>("Department not found with name = " + departmentName, HttpStatus.NOT_FOUND);
         }
 
