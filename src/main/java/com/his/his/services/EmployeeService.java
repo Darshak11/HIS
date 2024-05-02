@@ -4,6 +4,7 @@ import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
 import com.his.his.models.User;
+import com.his.his.models.User.EmployeeStatus;
 import com.his.his.models.User.EmployeeType;
 import com.his.his.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -62,6 +63,7 @@ public class EmployeeService {
         dto.setLastCheckIn(employee.getLastCheckIn());
         dto.setEmployeeStatus(employee.getEmployeeStatus());
         dto.setEmployeeType(employee.getEmployeeType());
+        dto.setEmail(employee.getEmail());
         return dto;
     }
 
@@ -144,7 +146,8 @@ public class EmployeeService {
         User employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exists " + id));
         // employee_DepartmentService.deleteEmployee(employee);
-        employeeRepository.delete(employee);
+        // employeeRepository.delete(employee);
+        employee.setEmployeeStatus(EmployeeStatus.DELETED);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

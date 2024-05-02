@@ -36,7 +36,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User implements UserDetails {
     public enum EmployeeStatus {
-        CHECKED_IN, CHECKED_OUT
+        CHECKED_IN, CHECKED_OUT, DELETED
     }
 
     public enum EmployeeType {
@@ -53,6 +53,10 @@ public class User implements UserDetails {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "employeeId", updatable = false, nullable = false)
     private UUID employeeId;
+
+    @Convert(converter = StringCryptoConverter.class)
+    @Column(name = "Email", nullable = true)
+    private String email;
 
     @Convert(converter = StringCryptoConverter.class)
     @Column(name = "Name", nullable = false)

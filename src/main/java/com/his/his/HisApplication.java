@@ -87,6 +87,7 @@ public class HisApplication implements CommandLineRunner {
 		employee.setLastCheckIn("1:02");
 		employee.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
 		employee.setRole(Role.DOCTOR);
+		employee.setEmail("efef");
 		employee.setPassword(encoder.encode("1234"));
 		employee.setEmployeeType(EmployeeType.DOCTOR);
 
@@ -96,6 +97,7 @@ public class HisApplication implements CommandLineRunner {
 		employee1.setLastCheckIn("1:02");
 		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
 		employee1.setRole(Role.NURSE);
+		employee1.setEmail("nivnervk");
 		employee1.setPassword(encoder.encode("1234"));
 		employee1.setEmployeeType(EmployeeType.NURSE);
 
@@ -105,6 +107,7 @@ public class HisApplication implements CommandLineRunner {
 		employee2.setLastCheckIn("2:00");
 		employee2.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
 		employee2.setRole(Role.HEAD_NURSE);
+		employee2.setEmail("evgeve");
 		employee2.setPassword(encoder.encode("1234"));
 		employee2.setEmployeeType(EmployeeType.HEAD_NURSE);
 

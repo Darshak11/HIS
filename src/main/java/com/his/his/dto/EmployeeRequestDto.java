@@ -23,4 +23,5 @@ public class EmployeeRequestDto implements Serializable
     String lastCheckIn;
     EmployeeStatus employeeStatus;
     EmployeeType employeeType;
+    String email;
 }
