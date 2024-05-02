@@ -96,16 +96,21 @@ public class PatientController {
         }
     }
 
-    // //BUILD DELETE Patient REST API
-    // @DeleteMapping("{id}")
-    // public ResponseEntity<HttpStatus> deletePatient(@PathVariable long id){
-    //     Patient patient = patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient not exists "+id));
+    //BUILD DELETE Patient REST API
+    @DeleteMapping("{publicId}")
+    public ResponseEntity<?> deletePatient(@PathVariable String publicId){
+        UUID privateId = publicPrivateService.privateIdByPublicId(publicId);
+        try {
+            patientService.transferPatient(privateId, Patient.PatientType.NOT_VERIFIED);
+            // logger.debug("Delete Patient");
+            return ResponseEntity.ok("Patient deleted successfully");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Patient not found with id = "+publicId, HttpStatus.NOT_FOUND);
+        }
+        
 
-    //     patientRepository.delete(patient);
-    //     // logger.debug("Delete Patient");
-    //     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-    // }
+    }
 
 
     @GetMapping("/transfer/{id}")
