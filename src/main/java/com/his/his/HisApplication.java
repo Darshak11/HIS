@@ -115,17 +115,17 @@ public class HisApplication implements CommandLineRunner {
 		Patient patient = new Patient();
 		patient.setName("Karan");
 		patient.setAabhaId("1234");
-		patient.setAadharId("123456");
+		// patient.setAadharId("123456");
 		patient.setEmailId("kadn@gmail.com");
 		patient.setDateOfBirth("12/06/2002");
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
-		patient.setPatientType(PatientType.OUTPATIENT);
+		patient.setPatientType(PatientType.INPATIENT);
 
 		Patient patient1=new Patient();
 		patient1.setName("Darshak");
 		patient1.setAabhaId("1234");
-		patient1.setAadharId("123456");
+		// patient1.setAadharId("123456");
 		patient1.setEmailId("kadn@gmail.com");
 		patient1.setDateOfBirth("12/06/2002");
 		patient1.setEmergencyContactNumber("45454545454");

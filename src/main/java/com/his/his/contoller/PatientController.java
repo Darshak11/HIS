@@ -133,5 +133,16 @@ public class PatientController {
             return new ResponseEntity<>("Patient not found with name = "+patientName, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/verifyEmail/{publicId}/{patientType}")
+    public ResponseEntity<?> verifyEmail(@PathVariable String publicId,@PathVariable String patientType) {
+        try {
+            patientService.verifyEmail(publicId, patientType);
+            return ResponseEntity.ok("Email Verified");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Email not sent", HttpStatus.NOT_FOUND);
+        }
+    }
     
 }

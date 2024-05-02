@@ -6,6 +6,9 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import com.his.his.models.Patient;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Files;
@@ -40,7 +43,7 @@ public class EmailService {
     //     mailSender.send(message);
     // }
 
-    public void sendHtmlEmail(String to, String subject, String htmlFileName) throws MessagingException {
+    public void sendHtmlEmail(String to, String subject, String htmlFileName, String publicId, Patient.PatientType patientType ) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
     
         message.setFrom(new InternetAddress("hadproject75@gmail.com"));
@@ -51,6 +54,8 @@ public class EmailService {
         String htmlContent = "";
         try {
             htmlContent = new String(Files.readAllBytes(Paths.get("src/main/java/com/his/his/services/Email HTML pages/" + htmlFileName)));
+            htmlContent = htmlContent.replace("{publicId}", publicId);
+            htmlContent = htmlContent.replace("{patientType}", patientType.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

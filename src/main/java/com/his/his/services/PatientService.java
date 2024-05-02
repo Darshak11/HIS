@@ -46,21 +46,22 @@ public class PatientService {
         Patient patient = new Patient();
         patient.setName(patientRegisterDto.getName());
         patient.setAabhaId(patientRegisterDto.getAabhaId());
-        patient.setAadharId(patientRegisterDto.getAadharId());
+        // patient.setAadharId(patientRegisterDto.getAadharId());
         patient.setEmailId(patientRegisterDto.getEmailId());
         patient.setDateOfBirth(patientRegisterDto.getDateOfBirth());
         patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
-        patient.setPatientType(patientRegisterDto.getPatientType());
+        patient.setPatientType(PatientType.NOT_VERIFIED);
+        
+        //Put this in Exception block for handling failure
+        patientRepository.save(patient);
+        publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
         try {
-            emailService.sendHtmlEmail(patient.getEmailId(), "You have been successfully registered into our system","TermsAndConditions.html");
+            emailService.sendHtmlEmail(patient.getEmailId(), "You have been successfully registered into our system","TermsAndConditions.html",publicPrivateService.publicIdByPrivateId(patient.getPatientId()), patientRegisterDto.getPatientType());
         } catch (MessagingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        //Put this in Exception block for handling failure
-        patientRepository.save(patient);
-        publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
         return new ResponseEntity<>("Patient Registered Successfully",HttpStatus.OK);
     }
 
@@ -81,7 +82,7 @@ public class PatientService {
         dto.setPatientId(publicPrivateService.publicIdByPrivateId(patient.getPatientId()));
         dto.setName(patient.getName());
         dto.setAabhaId(patient.getAabhaId());
-        dto.setAadharId(patient.getAadharId());
+        // dto.setAadharId(patient.getAadharId());
         dto.setEmailId(patient.getEmailId());
         dto.setDateOfBirth(patient.getDateOfBirth());
         dto.setEmergencyContactNumber(patient.getEmergencyContactNumber());
@@ -127,7 +128,7 @@ public class PatientService {
         Patient updatePatient = patientRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Patient does not exist with id "+id));
         updatePatient.setName(patientDetails.getName());
         updatePatient.setAabhaId(patientDetails.getAabhaId());
-        updatePatient.setAadharId(patientDetails.getAadharId());
+        // updatePatient.setAadharId(patientDetails.getAadharId());
         updatePatient.setEmailId(patientDetails.getEmailId());
         updatePatient.setDateOfBirth(patientDetails.getDateOfBirth());
         updatePatient.setEmergencyContactNumber(patientDetails.getEmergencyContactNumber());
@@ -157,5 +158,13 @@ public class PatientService {
         } else {
             throw new ResourceNotFoundException("Patients with name " + patientName + " not found");
         }
+    }
+
+    public void verifyEmail(String publicId, String patientType) {
+        UUID privatePatientId = publicPrivateService.privateIdByPublicId(publicId);
+        Patient.PatientType type = Patient.PatientType.valueOf(patientType);
+        Patient patient = patientRepository.findById(privatePatientId).orElseThrow(() -> new ResourceNotFoundException("Patient not found with id = " + publicId));
+        patient.setPatientType(type);
+        patientRepository.save(patient);
     }
 }

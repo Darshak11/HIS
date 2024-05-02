@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class PatientRegisterDto implements Serializable{
     String name ;
     String aabhaId ;
-    String aadharId;
+    // String aadharId;
     String emailId;
     String dateOfBirth;
     String emergencyContactNumber;

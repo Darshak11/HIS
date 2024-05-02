@@ -30,7 +30,7 @@ public class Patient
     }
     
     public enum PatientType {
-        INPATIENT, OUTPATIENT
+        INPATIENT, OUTPATIENT, NOT_VERIFIED //NOT_VERIFIED means either patient is deleted or not verified yet
     }
     
     public enum DischargeStatus {
@@ -55,9 +55,9 @@ public class Patient
     @Column(name = "aabhaId", nullable = false )
     private String aabhaId;
 
-    @Convert(converter = StringCryptoConverter.class)
-    @Column(name = "aadharId", nullable = false )
-    private String aadharId;
+    // @Convert(converter = StringCryptoConverter.class)
+    // @Column(name = "aadharId", nullable = false )
+    // private String aadharId;
 
     @Convert(converter = StringCryptoConverter.class)
     @Column(name = "emailId", nullable = false )

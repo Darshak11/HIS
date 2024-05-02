@@ -21,7 +21,7 @@ public class PatientRequestDto implements Serializable {
     private String patientId;
     private String name;
     private String aabhaId;
-    private String aadharId;
+    // private String aadharId;
     private String emailId;
     private String dateOfBirth;
     private String emergencyContactNumber;
