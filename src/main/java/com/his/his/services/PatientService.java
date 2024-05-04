@@ -89,6 +89,7 @@ public class PatientService {
         dto.setGender(patient.getGender());
         dto.setPatientType(patient.getPatientType());
         dto.setDischargeStatus(patient.getDischargeStatus());
+        dto.setBloodGroup(patient.getBloodGroup());
         return dto;
     }
 

@@ -1,6 +1,8 @@
 package com.his.his.dto;
 
 import com.his.his.models.Patient;
+import com.his.his.models.Patient.BloodGroup;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +22,7 @@ public class PatientRegisterDto implements Serializable{
     String emergencyContactNumber;
     Patient.Gender gender;
     Patient.PatientType patientType;
+    Patient.BloodGroup bloodGroup;
 }
 
 

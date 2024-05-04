@@ -37,6 +37,10 @@ public class Patient
         Discharged_by_doctor, Discharged_by_nurse
     }
 
+    public enum BloodGroup {
+        A_POSITIVE, A_NEGATIVE, B_POSITIVE, B_NEGATIVE, AB_POSITIVE, AB_NEGATIVE, O_POSITIVE, O_NEGATIVE
+    }
+
     public Patient(){
 
     }
@@ -81,6 +85,10 @@ public class Patient
     @Column(name = "DischargeStatus")
     @Enumerated(EnumType.STRING)
     private DischargeStatus dischargeStatus;
+
+    @Column(name = "bloodGroup",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BloodGroup bloodGroup;
     
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE)
     private List<Patient_Department> patientDepartments;

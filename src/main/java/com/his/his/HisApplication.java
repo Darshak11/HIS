@@ -24,6 +24,7 @@ import com.his.his.models.Patient_Doctor;
 import com.his.his.models.Role;
 import com.his.his.models.User;
 import com.his.his.models.CompositePrimaryKeys.Patient_DoctorId;
+import com.his.his.models.Patient.BloodGroup;
 import com.his.his.models.Patient.Gender;
 import com.his.his.models.Patient.PatientType;
 import com.his.his.models.User.EmployeeType;
@@ -124,6 +125,7 @@ public class HisApplication implements CommandLineRunner {
 		patient.setEmergencyContactNumber("45454545454");
 		patient.setGender(Gender.MALE);
 		patient.setPatientType(PatientType.INPATIENT);
+		patient.setBloodGroup(BloodGroup.B_POSITIVE);
 
 		Patient patient1=new Patient();
 		patient1.setName("Darshak");
@@ -134,6 +136,7 @@ public class HisApplication implements CommandLineRunner {
 		patient1.setEmergencyContactNumber("45454545454");
 		patient1.setGender(Gender.MALE);
 		patient1.setPatientType(PatientType.OUTPATIENT);
+		patient1.setBloodGroup(BloodGroup.AB_POSITIVE);
 
 		patientService.createPatient(patient);
 		patientService.createPatient(patient1);
