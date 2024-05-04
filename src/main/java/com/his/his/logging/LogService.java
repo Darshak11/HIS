@@ -78,7 +78,15 @@ public class LogService {
     }
 
     public List<LogRequestDto> getLogsByActorandUserId(UUID actorId, UUID userId) {
-        return logRepository.findByActorIdAndUserId(actorId.toString(), userId.toString())
+        // Logs log = new Logs();
+        // log.setActorId(actorId.toString());
+        // log.setUserId(userId.toString());
+        // log.setLevel("APP");
+        // log.setMsg("Get all doctors");
+        // logRepository.save(log);
+        // // log.setLevel("INFO");
+        // logRepository.save(log);
+        return logRepository.findByActorIdAndUserIdAndLevel(actorId.toString(), userId.toString(), "APP")
                 .stream()
                 .map(Logs -> {
                     LogRequestDto dto = converttoDto(Logs);

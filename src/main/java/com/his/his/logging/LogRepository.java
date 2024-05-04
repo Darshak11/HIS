@@ -13,5 +13,7 @@ public interface LogRepository extends JpaRepository<Logs, Long>{
     List<Logs> findByUserId(String userId);
 
     Collection<Logs> findByActorIdAndUserId(String string, String string2);
+
+    Collection<Logs> findByActorIdAndUserIdAndLevel(String actorId, String userId, String string);
     
 }
