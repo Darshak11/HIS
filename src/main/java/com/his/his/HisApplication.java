@@ -95,7 +95,7 @@ public class HisApplication implements CommandLineRunner {
 		employee1.setName("Darshak");
 		employee1.setDateOfBirth("12/03/12");
 		employee1.setLastCheckIn("1:02");
-		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_OUT);
+		employee1.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
 		employee1.setRole(Role.NURSE);
 		employee1.setEmail("nivnervk");
 		employee1.setPassword(encoder.encode("1234"));

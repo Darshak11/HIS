@@ -77,4 +77,14 @@ public class LogService {
                 .collect(Collectors.toList());
     }
 
+    public List<LogRequestDto> getLogsByActorandUserId(UUID actorId, UUID userId) {
+        return logRepository.findByActorIdAndUserId(actorId.toString(), userId.toString())
+                .stream()
+                .map(Logs -> {
+                    LogRequestDto dto = converttoDto(Logs);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

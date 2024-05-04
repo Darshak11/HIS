@@ -97,7 +97,7 @@ public class DepartmentController {
             loggingService.addLog("INFO", "Delete Department", privateId);
             return httpStatus;
         } catch (Throwable e) {
-            System.out.println("EROOR: ___" + e.getMessage());
+            System.out.println("ERROR: ___" + e.getMessage());
             if (privateId != null) {
                 System.err.println(e.getMessage());
                 loggingService.addLog("ERROR", e.getMessage().substring(0, Math.min(e.getMessage().length(), 200)), privateId);

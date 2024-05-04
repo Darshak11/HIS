@@ -2,6 +2,7 @@ package com.his.his.contoller;
 
 import com.his.his.dto.EmployeeRegisterDto;
 import com.his.his.dto.EmployeeRequestDto;
+import com.his.his.logging.LogService;
 import com.his.his.models.User;
 import com.his.his.services.EmployeeService;
 import com.his.his.services.PublicPrivateService;
@@ -27,6 +28,9 @@ public class EmployeeController {
     @Autowired
     private PublicPrivateService publicPrivateIdService;
 
+    @Autowired
+    private LogService loggingService;
+
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody EmployeeRegisterDto registerDto) {
         return employeeService.signup(registerDto);
@@ -35,6 +39,7 @@ public class EmployeeController {
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read')")
     public List<EmployeeRequestDto> getAllEmployees() {
+        loggingService.addLog("INFO","Get all employees",null);
         return employeeService.getAllEmployees();
     }
 
@@ -49,12 +54,15 @@ public class EmployeeController {
     @GetMapping("{id}")
     // @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<Object> getEmployeeId(@PathVariable @NonNull String id) {
+        UUID privateEmployeeId =null;
         try {
-            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
             EmployeeRequestDto employee = employeeService.getEmployeeById(privateEmployeeId);
+            loggingService.addLog("INFO","Get Employee by Id",privateEmployeeId);
             return ResponseEntity.ok(employee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            loggingService.addLog("ERROR", e.getMessage(), privateEmployeeId);
             return new ResponseEntity<>("Employee not found with id = " + id, HttpStatus.NOT_FOUND);
         }
     }
@@ -62,18 +70,21 @@ public class EmployeeController {
     @GetMapping("/getAllDoctors")
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read') or hasAuthority('headNurse:read')")
     public List<EmployeeRequestDto> getAllDoctors() {
+        loggingService.addLog("INFO","Get all doctors",null);
         return employeeService.getAllDoctors();
     }
 
     @GetMapping("/getAllNurses")
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('headNurse:read')")
     public List<EmployeeRequestDto> getAllNurses() {
+        loggingService.addLog("INFO","Get all nurses",null);
         return employeeService.getAllNurses();
     }
 
     @GetMapping("/getAllHeadNurses")
     @PreAuthorize("hasAuthority('admin:read')")
     public List<EmployeeRequestDto> getAllHeadNurses() {
+        loggingService.addLog("INFO","Get all head nurses",null);
         return employeeService.getAllHeadNurses();
     }
 
@@ -83,12 +94,15 @@ public class EmployeeController {
     // post mapping vs put mapping. post used to create a resource and put used to
     // update a resource
     public ResponseEntity<Object> updateEmployee(@PathVariable String id, @RequestBody User employeeDetails) {
+        UUID privateEmployeeId = null;
         try {
-            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
             EmployeeRequestDto updatedEmployee = employeeService.updateEmployee(privateEmployeeId, employeeDetails);
+            loggingService.addLog("INFO","Update Employee",privateEmployeeId);
             return ResponseEntity.ok(updatedEmployee);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            loggingService.addLog("ERROR", e.getMessage(), privateEmployeeId);
             return new ResponseEntity<>("Employee not found with id = " + id.toString(), HttpStatus.NOT_FOUND);
         }
     }
@@ -97,11 +111,14 @@ public class EmployeeController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<?> deleteEmployee(@PathVariable String id) {
+        UUID privateEmployeeId = null;
         try {
-            UUID privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            privateEmployeeId = publicPrivateIdService.privateIdByPublicId(id);
+            loggingService.addLog("INFO","Delete Employee",privateEmployeeId);
             return employeeService.deleteEmployee(privateEmployeeId);
         } catch (Exception e) {
             System.out.println(e.toString());
+            loggingService.addLog("ERROR", e.getMessage(), privateEmployeeId);
             return new ResponseEntity<>("Failed to delete employee with id = " + id.toString(), HttpStatus.NOT_FOUND);
         }
     }

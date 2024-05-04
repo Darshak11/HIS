@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.his.his.dto.EmployeeRequestDto;
+import com.his.his.logging.LogService;
 import com.his.his.services.Employee_DepartmentService;
 import com.his.his.services.PublicPrivateService;
 
@@ -31,19 +32,25 @@ public class Employee_DepartmentController {
     @Autowired
     private PublicPrivateService publicPrivateService;
 
+    @Autowired
+    private LogService loggingService;
+
     @GetMapping("/getAllEmployeesByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('admin:read') or hasAuthority('headNurse:read')")
     public ResponseEntity<?> getAllEmployeesByDepartmentID(@PathVariable String departmentId) {
+        UUID privateDepartmentId=null;
         try {
-            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
+            privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
             List<EmployeeRequestDto> employees = employeeDepartmentService.getAllEmployeesByDepartmentID(privateDepartmentId);
-        if(employees.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        else
-            return ResponseEntity.ok(employees);
+            loggingService.addLog("INFO","Get all employees by department id",privateDepartmentId);
+            if(employees.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            else
+                return ResponseEntity.ok(employees);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            loggingService.addLog("ERROR", e.toString(), privateDepartmentId);
             return new ResponseEntity<>("Department not found with id = "+departmentId.toString(), HttpStatus.NOT_FOUND);
         }
         
@@ -52,46 +59,55 @@ public class Employee_DepartmentController {
     @GetMapping("/getDepartmentByEmployeeID/{employeeId}")
     @PreAuthorize("hasAuthority('admin:read')")
     public ResponseEntity<?> getDepartmentByEmployeeID(@PathVariable String employeeId) {
+        UUID privateEmployeeId =null;
         try {
-            UUID privateEmployeeId = publicPrivateService.privateIdByPublicId(employeeId);
+            privateEmployeeId = publicPrivateService.privateIdByPublicId(employeeId);
+            loggingService.addLog("INFO","GetDepartmentByEmployeeID", privateEmployeeId);
             return employeeDepartmentService.getDepartmentByEmployeeID(privateEmployeeId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Employee not found with id = "+employeeId.toString(), HttpStatus.NOT_FOUND);
+            loggingService.addLog("ERROR", e.toString(), privateEmployeeId);
+            return new ResponseEntity<>("Employee not found with id = " + employeeId.toString(), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/getAllNursesByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('nurse:read') or hasAuthority('headNurse:read')")
     public ResponseEntity<?> getAllNursesByDepartmentID(@PathVariable String departmentId) {
+        UUID privateDepartmentId = null;
         try {
-            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
+            privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
             List<EmployeeRequestDto> nurses = employeeDepartmentService.getAllNursesByDepartmentID(privateDepartmentId);
-            if(nurses.isEmpty()) {
+            loggingService.addLog("INFO", "getAllNursesByDepartmentID", privateDepartmentId);
+            if (nurses.isEmpty()) {
                 return ResponseEntity.noContent().build();
-            }
-            else
+            } else
                 return ResponseEntity.ok(nurses);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Department not found with id = "+departmentId.toString(), HttpStatus.NOT_FOUND);
+            loggingService.addLog("ERROR", e.getMessage(), privateDepartmentId);
+            return new ResponseEntity<>("Department not found with id = " + departmentId.toString(),
+                    HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/getAllDoctorsByDepartmentID/{departmentId}")
     @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('headNurse:read') or hasAuthority('nurse:read')")
     public ResponseEntity<?> getAllDoctorsByDepartmentID(@PathVariable String departmentId) {
+        UUID privateDepartmentId = null;
         try {
-            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
-            List<EmployeeRequestDto> doctors = employeeDepartmentService.getAllDoctorsByDepartmentID(privateDepartmentId);
-            if(doctors.isEmpty()) {
+            privateDepartmentId = publicPrivateService.privateIdByPublicId(departmentId);
+            List<EmployeeRequestDto> doctors = employeeDepartmentService
+                    .getAllDoctorsByDepartmentID(privateDepartmentId);
+            loggingService.addLog("INFO", "getAllDoctorsByDepartmentID", privateDepartmentId);
+                    if (doctors.isEmpty()) {
                 return ResponseEntity.noContent().build();
-            }
-            else
+            } else
                 return ResponseEntity.ok(doctors);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>("Department not found with id = "+departmentId, HttpStatus.NOT_FOUND);
+            loggingService.addLog("ERROR", e.getMessage(), privateDepartmentId);
+            return new ResponseEntity<>("Department not found with id = " + departmentId, HttpStatus.NOT_FOUND);
         }
     }
 }
