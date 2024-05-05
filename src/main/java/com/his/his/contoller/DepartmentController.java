@@ -31,7 +31,7 @@ public class DepartmentController {
     private LogService loggingService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('department:read')" or "hasAuthority('desk:read)")
+    @PreAuthorize("hasAuthority('department:read') or hasAuthority('desk:read')")
     public List<DepartmentRequestDto> getAllDepartment() {
         loggingService.addLog("INFO", "Get all departments", null);
         return departmentService.getAllDepartments();

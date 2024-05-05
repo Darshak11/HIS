@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/department","/department/{id}").hasAnyAuthority(DEP_UPDATE.getPermission(),DESK_READ.getPermission())
                                 .requestMatchers(GET,"/patient","/patient/{id}","patient/transfer/{id}").hasAnyAuthority(DESK_READ.getPermission(),HEAD_NURSE_READ.getPermission())
                                 .requestMatchers("/patientDoctor").hasAnyAuthority(DESK_READ.getPermission())
-                                .requestMatchers(GET,"/employeeDepartment").hasAnyAuthority(NURSE_READ.getPermission(),HEAD_NURSE_READ.getPermission(),DOCTOR_READ.getPermission())
+                                .requestMatchers(GET,"/employeeDepartment").hasAnyAuthority(NURSE_READ.getPermission(),HEAD_NURSE_READ.getPermission(),DOCTOR_READ.getPermission(),DESK_READ.getPermission())
                                 .anyRequest()
                                 .authenticated()
                 )

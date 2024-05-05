@@ -92,7 +92,7 @@ public class Employee_DepartmentController {
     }
 
     @GetMapping("/getAllDoctorsByDepartmentID/{departmentId}")
-    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('headNurse:read') or hasAuthority('nurse:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('headNurse:read') or hasAuthority('nurse:read') or hasAuthority('desk:read')")
     public ResponseEntity<?> getAllDoctorsByDepartmentID(@PathVariable String departmentId) {
         UUID privateDepartmentId = null;
         try {
