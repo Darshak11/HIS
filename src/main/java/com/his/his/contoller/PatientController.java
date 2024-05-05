@@ -98,6 +98,7 @@ public class PatientController {
 
     //BUILD DELETE Patient REST API
     @DeleteMapping("{publicId}")
+    @PreAuthorize("hasAuthority('desk:delete')")
     public ResponseEntity<?> deletePatient(@PathVariable String publicId){
         UUID privateId = publicPrivateService.privateIdByPublicId(publicId);
         try {

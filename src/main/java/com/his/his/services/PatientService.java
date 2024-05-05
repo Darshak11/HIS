@@ -52,7 +52,7 @@ public class PatientService {
         patient.setEmergencyContactNumber(patientRegisterDto.getEmergencyContactNumber());
         patient.setGender(patientRegisterDto.getGender());
         patient.setPatientType(PatientType.NOT_VERIFIED);
-        
+        patient.setBloodGroup(patientRegisterDto.getBloodGroup());
         //Put this in Exception block for handling failure
         patientRepository.save(patient);
         publicPrivateService.savePublicPrivateId(patient.getPatientId(), "PATIENT");
@@ -135,6 +135,7 @@ public class PatientService {
         updatePatient.setEmergencyContactNumber(patientDetails.getEmergencyContactNumber());
         updatePatient.setGender(patientDetails.getGender());
         updatePatient.setPatientType(patientDetails.getPatientType());
+        updatePatient.setBloodGroup((patientDetails.getBloodGroup()));
         Patient updatedPatient = patientRepository.save(updatePatient);
         return getPatientId(id);
     }
