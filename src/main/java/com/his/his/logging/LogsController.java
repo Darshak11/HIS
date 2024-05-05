@@ -75,4 +75,19 @@ public class LogsController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/getLogsByDepartment/{employeeId}")
+    @PreAuthorize("hasAuthority('headNurse:read')")
+    public ResponseEntity<?>getLogsByDepartment(@PathVariable String employeeId){
+        UUID employeeIdUUID = null;
+        try{
+            employeeIdUUID = publicPrivateService.privateIdByPublicId(employeeId);
+            return ResponseEntity.ok(logService.getLogsByDepartment(employeeIdUUID));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

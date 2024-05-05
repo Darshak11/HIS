@@ -1,5 +1,6 @@
 package com.his.his.logging;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -9,6 +10,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.his.his.dto.DepartmentRequestDto;
+import com.his.his.dto.EmployeeRequestDto;
+import com.his.his.models.Department;
+import com.his.his.models.HeadNurse_Department;
+import com.his.his.services.Employee_DepartmentService;
+import com.his.his.services.HeadNurse_DepartmentService;
 import com.his.his.services.PublicPrivateService;
 
 import jakarta.transaction.Transactional;
@@ -21,12 +28,19 @@ public class LogService {
     PublicPrivateService publicPrivateService;
 
     @Autowired
+    private Employee_DepartmentService employee_DepartmentService;
+
+    @Autowired
+    private HeadNurse_DepartmentService headNurse_DepartmentService;
+
+    @Autowired
     private LogRepository logRepository;
 
     public LogRequestDto converttoDto(Logs logs) {
         LogRequestDto dto = new LogRequestDto();
         dto.setId(logs.getId());
-        dto.setEventDate(logs.getEventDate());;
+        dto.setEventDate(logs.getEventDate());
+        ;
         dto.setLevel(logs.getLevel());
         dto.setMsg(logs.getMsg());
         // dto.setThrowable(logs.getThrowable());
@@ -37,7 +51,7 @@ public class LogService {
 
     public void addLog(String level, String msg, UUID userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String actorId =authentication.getName();
+        String actorId = authentication.getName();
         String userIdString = (userId != null) ? userId.toString() : "null";
         logRepository.save(new Logs(level, msg, actorId, userIdString));
     }
@@ -93,6 +107,26 @@ public class LogService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<Logs> getLogsByDepartment(UUID employeeIdUUID) {
+        Department department = headNurse_DepartmentService.getDepartmentByHeadNurseID(employeeIdUUID);
+
+        List<EmployeeRequestDto> employees = employee_DepartmentService
+                .getAllEmployeesByDepartmentID(department.getDepartmentId());
+
+        List<Logs> logs = new ArrayList<>();
+        for (EmployeeRequestDto employee : employees) {
+            System.out.println(employee.getEmployeeId());
+            List<Logs> employeeLogs = logRepository
+                    .findByActorId(publicPrivateService.privateIdByPublicId(employee.getEmployeeId()).toString());
+            employeeLogs.stream()
+                    .filter(log -> "APP".equals(log.getLevel()))
+                    .forEach(logs::add);
+        }
+
+        return logs;
+
     }
 
 }
