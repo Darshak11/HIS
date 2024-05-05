@@ -91,6 +91,15 @@ public class HisApplication implements CommandLineRunner {
 		employee.setEmail("efef");
 		employee.setPassword(encoder.encode("1234"));
 		employee.setEmployeeType(EmployeeType.DOCTOR);
+		User doctor2 = new User();
+		doctor2.setDateOfBirth("12/05/12");
+		doctor2.setName("Karan");
+		doctor2.setLastCheckIn("1:02");
+		doctor2.setEmployeeStatus(User.EmployeeStatus.CHECKED_IN);
+		doctor2.setRole(Role.DOCTOR);
+		doctor2.setEmail("efef");
+		doctor2.setPassword(encoder.encode("1234"));
+		doctor2.setEmployeeType(EmployeeType.DOCTOR);
 
 		User employee1 = new User();
 		employee1.setName("Darshak");
@@ -115,6 +124,7 @@ public class HisApplication implements CommandLineRunner {
 		employeeService.createEmployee(employee);
 		employeeService.createEmployee(employee1);
 		employeeService.createEmployee(employee2);
+		employeeService.createEmployee(doctor2);
 
 		Patient patient = new Patient();
 		patient.setName("Karan");
@@ -172,7 +182,7 @@ public class HisApplication implements CommandLineRunner {
 
 		Employee_Department doctorDepartment = employeeDepartmentService.addEmployee_Department(doctor.getEmployeeId(),
 				department1.getDepartmentId());
-
+		employeeDepartmentService.addEmployee_Department(doctor2.getEmployeeId(),department1.getDepartmentId());
 		Employee_Department nurseDepartment = employeeDepartmentService
 				.addEmployee_Department(employee1.getEmployeeId(), department1.getDepartmentId());
 
