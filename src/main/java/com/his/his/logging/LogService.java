@@ -109,19 +109,20 @@ public class LogService {
                 .collect(Collectors.toList());
     }
 
-    public List<Logs> getLogsByDepartment(UUID employeeIdUUID) {
+    public List<?> getLogsByDepartment(UUID employeeIdUUID) {
         Department department = headNurse_DepartmentService.getDepartmentByHeadNurseID(employeeIdUUID);
 
         List<EmployeeRequestDto> employees = employee_DepartmentService
                 .getAllEmployeesByDepartmentID(department.getDepartmentId());
 
-        List<Logs> logs = new ArrayList<>();
+        List<LogRequestDto> logs = new ArrayList<>();
         for (EmployeeRequestDto employee : employees) {
             System.out.println(employee.getEmployeeId());
             List<Logs> employeeLogs = logRepository
                     .findByActorId(publicPrivateService.privateIdByPublicId(employee.getEmployeeId()).toString());
             employeeLogs.stream()
                     .filter(log -> "APP".equals(log.getLevel()))
+                    .map(this::converttoDto)
                     .forEach(logs::add);
         }
 
