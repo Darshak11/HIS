@@ -65,10 +65,13 @@ public enum Role {
   ),
   NURSE(
           Set.of(
-                  NURSE_READ,
-                  PATIENT_READ,
-                  PATIENT_UPDATE,
-                  PATIENT_CREATE
+                DOCTOR_READ,
+                DOCTOR_UPDATE,
+                DOCTOR_CREATE,
+                PATIENT_READ,
+                PATIENT_UPDATE,
+                PATIENT_CREATE,
+                NURSE_READ
           )
   )
 

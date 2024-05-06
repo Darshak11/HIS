@@ -44,8 +44,15 @@ public class LogService {
         dto.setLevel(logs.getLevel());
         dto.setMsg(logs.getMsg());
         // dto.setThrowable(logs.getThrowable());
-        dto.setActorId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getActorId())));
-        dto.setUserId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getUserId())));
+        dto.setActorId("");
+        dto.setUserId("");
+        if (logs.getActorId() != null) {
+            dto.setActorId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getActorId())));
+        }
+    
+        if (logs.getUserId() != null) {
+            dto.setUserId(publicPrivateService.publicIdByPrivateId(UUID.fromString(logs.getUserId())));
+        }
         return dto;
     }
 
@@ -121,7 +128,7 @@ public class LogService {
             List<Logs> employeeLogs = logRepository
                     .findByActorId(publicPrivateService.privateIdByPublicId(employee.getEmployeeId()).toString());
             employeeLogs.stream()
-                    .filter(log -> "APP".equals(log.getLevel()))
+                    .filter(log -> "APP".equals(log.getLevel()) || log.getUserId()!=null)
                     .map(this::converttoDto)
                     .forEach(logs::add);
         }

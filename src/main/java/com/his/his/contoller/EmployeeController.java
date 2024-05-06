@@ -68,7 +68,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getAllDoctors")
-    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read') or hasAuthority('headNurse:read')")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('desk:read') or hasAuthority('headNurse:read') or hasAuthority('nurse:read')")
     public List<EmployeeRequestDto> getAllDoctors() {
         loggingService.addLog("INFO","Get all doctors",null);
         return employeeService.getAllDoctors();

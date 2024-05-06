@@ -171,14 +171,14 @@ public class HisApplication implements CommandLineRunner {
 		}
 
 		// Create a new relationship and save it
-		Patient_Doctor patientDoctor = new Patient_Doctor();
-		patientDoctor.setId(id);
-		patientDoctor.setPatient(patient);
-		patientDoctor.setDoctor(doctor);
-		patientDoctorRepository.save(patientDoctor);
+		// Patient_Doctor patientDoctor = new Patient_Doctor();
+		// patientDoctor.setId(id);
+		// patientDoctor.setPatient(patient);
+		// patientDoctor.setDoctor(doctor);
+		// patientDoctorRepository.save(patientDoctor);
 
-		Patient_Department patientDepartment = patientDepartmentService.addPatient_Department(patient.getPatientId(),
-				department1.getDepartmentId());
+		// Patient_Department patientDepartment = patientDepartmentService.addPatient_Department(patient.getPatientId(),
+		// 		department1.getDepartmentId());
 
 		Employee_Department doctorDepartment = employeeDepartmentService.addEmployee_Department(doctor.getEmployeeId(),
 				department1.getDepartmentId());
@@ -193,10 +193,10 @@ public class HisApplication implements CommandLineRunner {
 		// System.out.println("Department ID = "+
 		// department1.getDepartmentId().toString());
 		System.out.println("Department ID =" + publicPrivateIdService.publicIdByPrivateId (department1.getDepartmentId()).toString());
-		System.out.println("Doctor ID = " + publicPrivateIdService.publicIdByPrivateId(doctor.getEmployeeId()).toString() + " and the Patient Id = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString());
+		// System.out.println("Doctor ID = " + publicPrivateIdService.publicIdByPrivateId(doctor.getEmployeeId()).toString() + " and the Patient Id = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString());
 
-		System.out.println("Patient ID = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString() + " and the Department ID = "
-				+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
+		// System.out.println("Patient ID = " + publicPrivateIdService.publicIdByPrivateId(patient.getPatientId()).toString() + " and the Department ID = "
+		// 		+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());
 
 		System.out.println("Doctor ID = " + publicPrivateIdService.publicIdByPrivateId(doctor.getEmployeeId()).toString() + " and the Department ID = "
 				+ publicPrivateIdService.publicIdByPrivateId(department1.getDepartmentId()).toString());

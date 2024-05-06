@@ -47,7 +47,7 @@ public class PatientController {
     }
 
     @GetMapping("/allInpatients")
-    @PreAuthorize("hasAuthority('desk:read') or hasAuthority('headNurse:read')")
+    @PreAuthorize("hasAuthority('desk:read') or hasAuthority('headNurse:read') or hasAuthority('doctor:read') or hasAuthority('nurse:read')")
     public List<PatientRequestDto> getAllInpatients() {
         return patientService.getAllInpatients();
     }
