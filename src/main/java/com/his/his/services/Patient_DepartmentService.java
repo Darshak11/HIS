@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.his.his.models.*;
+import com.his.his.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,7 @@ import org.springframework.stereotype.Service;
 import com.his.his.dto.DepartmentRequestDto;
 import com.his.his.dto.PatientRequestDto;
 import com.his.his.exception.ResourceNotFoundException;
-import com.his.his.models.Department;
-import com.his.his.models.Patient;
-import com.his.his.models.Patient_Department;
-import com.his.his.models.Patient_Doctor;
 import com.his.his.models.CompositePrimaryKeys.Patient_DepartmentId;
-import com.his.his.repository.DepartmentRepository;
-import com.his.his.repository.PatientRepository;
-import com.his.his.repository.Patient_DepartmentRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -35,11 +30,16 @@ public class Patient_DepartmentService {
     private final DepartmentRepository departmentRepository;
 
     @Autowired
+    private Employee_DepartmentRepository edRepository;
+
+    @Autowired
     private PatientService patientService;
 
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private UserRepository userRep;
     @Autowired
     public Patient_DepartmentService(Patient_DepartmentRepository patientDepartmentRepository,
             PatientRepository patientRepository, DepartmentRepository departmentRepository) {
@@ -70,11 +70,12 @@ public class Patient_DepartmentService {
     }
 
     public ResponseEntity<?> getAllPatientsByDepartmentID(UUID departmentId) {
+
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not exist with id " + departmentId));
         List<Patient_Department> patientDepartment = patientDepartmentRepository.findPatientsByDepartment(department);
 
-        List<Patient> patients = patientDepartment.stream().map(Patient_Department::getPatient).toList();
+        List<Patient> patients = patientDepartment.stream().map(Patient_Department::getPatient).filter(patient -> patient.getPatientType() ==Patient.PatientType.INPATIENT).toList();
 
         if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -85,6 +86,27 @@ public class Patient_DepartmentService {
                                 PatientRequestDto dto = patientService.convertPatientToDto(patient);
                                 return dto;
                             }).collect(Collectors.toList()));
+        }
+    }
+
+    public ResponseEntity<?> getAllPatientsByNurseID(UUID nurseId) {
+        User nurse = userRep.findById(nurseId).orElseThrow();
+        Department department = edRepository.findDepartmentsByEmployee(nurse).get(0).getDepartment();//.orElseThrow(() -> new ResourceNotFoundException("Nurse not exist with id " + nurseId)).getDepartment());
+        List<Patient_Department> patientDepartment = patientDepartmentRepository.findPatientsByDepartment(department);
+
+        List<Patient> patients = patientDepartment.stream().map(Patient_Department::getPatient).filter(patient -> patient.getPatientType() ==Patient.PatientType.INPATIENT).toList();
+
+        if (patients.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(
+                    patients.stream()
+                            .map(patient -> {
+                                PatientRequestDto dto = patientService.convertPatientToDto(patient);
+                                return dto;
+                            })
+                            .filter(patient->patient.getPatientType()== Patient.PatientType.INPATIENT).collect(Collectors.toList()));
+//                    .collect(Collectors.toList()));
         }
     }
 

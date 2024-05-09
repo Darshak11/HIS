@@ -40,6 +40,18 @@ public class Patient_DepartmentController {
         }
     }
 
+    @GetMapping("/getAllPatientsByNurseID/{Id}")
+    @PreAuthorize("hasAuthority('patient:read')")
+    public ResponseEntity<?> getAllPatientsByNurseID(@PathVariable String Id) {
+        try {
+            UUID privateDepartmentId = publicPrivateService.privateIdByPublicId(Id);
+            return patientDepartmentService.getAllPatientsByNurseID(privateDepartmentId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Nurse not found with id = "+Id, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/getAllDepartmentsByPatientID/{patientId}")
     @PreAuthorize("hasAuthority('desk:read')")
     public ResponseEntity<?> getAllDepartmentsByPatientID(@PathVariable String patientId) {
